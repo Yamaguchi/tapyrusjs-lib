@@ -6,6 +6,8 @@ export interface Network {
   bip32: Bip32;
   pubKeyHash: number;
   scriptHash: number;
+  coloredPubKeyHash: number;
+  coloredScriptHash: number;
   wif: number;
 }
 
@@ -23,6 +25,8 @@ export const prod: Network = {
   },
   pubKeyHash: 0x00,
   scriptHash: 0x05,
+  coloredPubKeyHash: 0x01,
+  coloredScriptHash: 0x06,
   wif: 0x80,
 };
 export const dev: Network = {
@@ -34,5 +38,7 @@ export const dev: Network = {
   },
   pubKeyHash: 0x6f,
   scriptHash: 0xc4,
+  coloredPubKeyHash: 0x70,
+  coloredScriptHash: 0xc5,
   wif: 0xef,
 };

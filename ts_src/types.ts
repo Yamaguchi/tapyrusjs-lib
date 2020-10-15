@@ -37,6 +37,8 @@ export const Network = typeforce.compile({
   },
   pubKeyHash: typeforce.UInt8,
   scriptHash: typeforce.UInt8,
+  coloredPubKeyHash: typeforce.UInt8,
+  coloredScriptHash: typeforce.UInt8,
   wif: typeforce.UInt8,
 });
 

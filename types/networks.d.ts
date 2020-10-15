@@ -4,6 +4,8 @@ export interface Network {
     bip32: Bip32;
     pubKeyHash: number;
     scriptHash: number;
+    coloredPubKeyHash: number;
+    coloredScriptHash: number;
     wif: number;
 }
 interface Bip32 {

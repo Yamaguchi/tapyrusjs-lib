@@ -1,5 +1,9 @@
 'use strict';
 Object.defineProperty(exports, '__esModule', { value: true });
+const cp2pkh_1 = require('./cp2pkh');
+exports.cp2pkh = cp2pkh_1.cp2pkh;
+const cp2sh_1 = require('./cp2sh');
+exports.cp2sh = cp2sh_1.cp2sh;
 const embed_1 = require('./embed');
 exports.embed = embed_1.p2data;
 const p2ms_1 = require('./p2ms');

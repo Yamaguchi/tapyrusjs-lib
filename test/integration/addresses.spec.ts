@@ -127,6 +127,8 @@ describe('bitcoinjs-lib (addresses)', () => {
       },
       pubKeyHash: 0x30,
       scriptHash: 0x32,
+      coloredPubKeyHash: 0x31,
+      coloredScriptHash: 0x33,
       wif: 0xb0,
     };
 

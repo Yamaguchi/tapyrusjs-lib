@@ -128,6 +128,7 @@ export function preform(x: any): any {
 
   if (x.data) x.data = x.data.map(fromHex);
   if (x.hash) x.hash = Buffer.from(x.hash, 'hex');
+  if (x.colorId) x.colorId = Buffer.from(x.colorId, 'hex');
   if (x.pubkey) x.pubkey = Buffer.from(x.pubkey, 'hex');
   if (x.signature) x.signature = Buffer.from(x.signature, 'hex');
   if (x.pubkeys) x.pubkeys = x.pubkeys.map(fromHex);

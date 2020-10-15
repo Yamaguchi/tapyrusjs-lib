@@ -9,6 +9,8 @@ exports.prod = {
   },
   pubKeyHash: 0x00,
   scriptHash: 0x05,
+  coloredPubKeyHash: 0x01,
+  coloredScriptHash: 0x06,
   wif: 0x80,
 };
 exports.dev = {
@@ -20,5 +22,7 @@ exports.dev = {
   },
   pubKeyHash: 0x6f,
   scriptHash: 0xc4,
+  coloredPubKeyHash: 0x70,
+  coloredScriptHash: 0xc5,
   wif: 0xef,
 };

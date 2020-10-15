@@ -56,6 +56,12 @@ function fromOutputScript(output, network) {
   try {
     return payments.p2wsh({ output, network }).address;
   } catch (e) {}
+  try {
+    return payments.cp2pkh({ output, network }).address;
+  } catch (e) {}
+  try {
+    return payments.cp2pkh({ output, network }).address;
+  } catch (e) {}
   throw new Error(bscript.toASM(output) + ' has no matching Address');
 }
 exports.fromOutputScript = fromOutputScript;
@@ -71,6 +77,10 @@ function toOutputScript(address, network) {
       return payments.p2pkh({ hash: decodeBase58.hash }).output;
     if (decodeBase58.version === network.scriptHash)
       return payments.p2sh({ hash: decodeBase58.hash }).output;
+    if (decodeBase58.version === network.coloredPubKeyHash)
+      return payments.cp2pkh({ hash: decodeBase58.hash }).output;
+    if (decodeBase58.version === network.coloredScriptHash)
+      return payments.cp2sh({ hash: decodeBase58.hash }).output;
   } else {
     try {
       decodeBech32 = fromBech32(address);
