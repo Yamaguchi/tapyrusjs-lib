@@ -8,9 +8,9 @@ const pushdata = require('pushdata-bitcoin');
 const typeforce = require('typeforce');
 
 export type OpCode = number;
-export const OPS = require('bitcoin-ops') as { [index: string]: OpCode };
+export const OPS = require('tapyrus-ops') as { [index: string]: OpCode };
 
-const REVERSE_OPS = require('bitcoin-ops/map') as { [index: number]: string };
+const REVERSE_OPS = require('tapyrus-ops/map') as { [index: number]: string };
 const OP_INT_BASE = OPS.OP_RESERVED; // OP_1 - 1
 
 function isOPInt(value: number): boolean {

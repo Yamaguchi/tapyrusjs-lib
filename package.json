@@ -1,18 +1,17 @@
 {
-  "name": "bitcoinjs-lib",
-  "version": "5.2.0",
-  "description": "Client-side Bitcoin JavaScript library",
+  "name": "tapyrusjs-lib",
+  "version": "0.1.0",
+  "description": "Client-side Tapyrus JavaScript library",
   "main": "./src/index.js",
   "types": "./types/index.d.ts",
   "engines": {
     "node": ">=8.0.0"
   },
   "keywords": [
-    "bitcoinjs",
-    "bitcoin",
+    "tapyrusjs",
+    "tapyrus",
     "browserify",
-    "javascript",
-    "bitcoinjs"
+    "javascript"
   ],
   "scripts": {
     "build": "npm run clean && tsc -p ./tsconfig.json && npm run formatjs",
@@ -42,7 +41,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/bitcoinjs/bitcoinjs-lib.git"
+    "url": "https://github.com/chaintope/tapyrusjs-lib.git"
   },
   "files": [
     "src",
@@ -53,7 +52,7 @@
     "bip174": "^2.0.1",
     "bip32": "^2.0.4",
     "bip66": "^1.1.0",
-    "bitcoin-ops": "^1.4.0",
+    "tapyrus-ops": "git+https://github.com/chaintope/tapyrus-ops",
     "bs58check": "^2.0.0",
     "create-hash": "^1.1.0",
     "create-hmac": "^1.1.3",
@@ -82,7 +81,7 @@
     "nyc": "^15.0.0",
     "prettier": "1.16.4",
     "proxyquire": "^2.0.1",
-    "regtest-client": "0.2.0",
+    "tapyrusjs-client": "git+https://github.com/chaintope/tapyrusjs-client",
     "rimraf": "^2.6.3",
     "ts-node": "^8.3.0",
     "tslint": "^5.20.1",
