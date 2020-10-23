@@ -148,10 +148,4 @@ npm run-script coverage
 - [merkle-lib](https://github.com/bitcoinjs/merkle-lib) - A performance conscious library for merkle root and tree calculations.
 - [minimaldata](https://github.com/bitcoinjs/minimaldata) - A module to check bitcoin policy: SCRIPT_VERIFY_MINIMALDATA
 
-## Alternatives
-
-- [BCoin](https://github.com/indutny/bcoin)
-- [Bitcore](https://github.com/bitpay/bitcore)
-- [Cryptocoin](https://github.com/cryptocoinjs/cryptocoin)
-
 ## LICENSE [MIT](LICENSE)
