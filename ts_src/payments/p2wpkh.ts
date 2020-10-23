@@ -1,5 +1,5 @@
 import * as bcrypto from '../crypto';
-import { bitcoin as BITCOIN_NETWORK } from '../networks';
+import { prod as PROD_NETWORK } from '../networks';
 import * as bscript from '../script';
 import { Payment, PaymentOpts } from './index';
 import * as lazy from './lazy';
@@ -44,7 +44,7 @@ export function p2wpkh(a: Payment, opts?: PaymentOpts): Payment {
     };
   });
 
-  const network = a.network || BITCOIN_NETWORK;
+  const network = a.network || PROD_NETWORK;
   const o: Payment = { name: 'p2wpkh', network };
 
   lazy.prop(o, 'address', () => {

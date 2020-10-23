@@ -9,10 +9,10 @@ function getAddress(node: any, network?: any): string {
 }
 
 describe('bitcoinjs-lib (BIP32)', () => {
-  it('can import a BIP32 testnet xpriv and export to WIF', () => {
+  it('can import a BIP32 dev mode xpriv and export to WIF', () => {
     const xpriv =
       'tprv8ZgxMBicQKsPd7Uf69XL1XwhmjHopUGep8GuEiJDZmbQz6o58LninorQAfcKZWARbtRtfnLcJ5MQ2AtHcQJCCRUcMRvmDUjyEmNUWwx8UbK';
-    const node = bip32.fromBase58(xpriv, bitcoin.networks.testnet);
+    const node = bip32.fromBase58(xpriv, bitcoin.networks.dev);
 
     assert.strictEqual(
       node.toWIF(),
@@ -45,7 +45,7 @@ describe('bitcoinjs-lib (BIP32)', () => {
     );
   });
 
-  it('can create a BIP32, bitcoin, account 0, external address', () => {
+  it('can create a BIP32, tapyrus, account 0, external address', () => {
     const path = "m/0'/0/0";
     const root = bip32.fromSeed(
       Buffer.from(
@@ -72,7 +72,7 @@ describe('bitcoinjs-lib (BIP32)', () => {
     );
   });
 
-  it('can create a BIP44, bitcoin, account 0, external address', () => {
+  it('can create a BIP44, tapyrus, account 0, external address', () => {
     const root = bip32.fromSeed(
       Buffer.from(
         'dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd',
@@ -100,7 +100,7 @@ describe('bitcoinjs-lib (BIP32)', () => {
     );
   });
 
-  it('can create a BIP49, bitcoin testnet, account 0, external address', () => {
+  it('can create a BIP49, tapyrus dev mode, account 0, external address', () => {
     const mnemonic =
       'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about';
     const seed = bip39.mnemonicToSeedSync(mnemonic);
@@ -112,9 +112,9 @@ describe('bitcoinjs-lib (BIP32)', () => {
     const { address } = bitcoin.payments.p2sh({
       redeem: bitcoin.payments.p2wpkh({
         pubkey: child.publicKey,
-        network: bitcoin.networks.testnet,
+        network: bitcoin.networks.dev,
       }),
-      network: bitcoin.networks.testnet,
+      network: bitcoin.networks.dev,
     });
     assert.strictEqual(address, '2Mww8dCYPUpKHofjgcXcBCEGmniw9CoaiD2');
   });

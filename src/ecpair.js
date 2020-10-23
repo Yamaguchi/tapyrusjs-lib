@@ -20,7 +20,7 @@ class ECPair {
     if (options === undefined) options = {};
     this.compressed =
       options.compressed === undefined ? true : options.compressed;
-    this.network = options.network || NETWORKS.bitcoin;
+    this.network = options.network || NETWORKS.prod;
     if (__Q !== undefined) this.__Q = ecc.pointCompress(__Q, this.compressed);
   }
   get privateKey() {
@@ -82,9 +82,9 @@ function fromWIF(wifString, network) {
       })
       .pop();
     if (!network) throw new Error('Unknown network version');
-    // otherwise, assume a network object (or default to bitcoin)
+    // otherwise, assume a network object (or default to prod)
   } else {
-    network = network || NETWORKS.bitcoin;
+    network = network || NETWORKS.prod;
     if (version !== network.wif) throw new Error('Invalid network version');
   }
   return fromPrivateKey(decoded.privateKey, {

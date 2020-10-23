@@ -132,7 +132,7 @@ describe(`Psbt`, () => {
         const psbt = Psbt.fromBase64(f.psbt);
 
         f.keys.forEach(({ inputToSign, WIF }) => {
-          const keyPair = ECPair.fromWIF(WIF, NETWORKS.testnet);
+          const keyPair = ECPair.fromWIF(WIF, NETWORKS.dev);
           psbt.signInput(inputToSign, keyPair);
         });
 

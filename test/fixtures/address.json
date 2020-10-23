@@ -1,14 +1,14 @@
 {
   "standard": [
     {
-      "network": "bitcoin",
+      "network": "prod",
       "version": 0,
       "hash": "751e76e8199196d454941c45d1b3a323f1433bd6",
       "base58check": "1BgGZ9tcN4rm9KBzDn7KprQz87SZ26SAMH",
       "script": "OP_DUP OP_HASH160 751e76e8199196d454941c45d1b3a323f1433bd6 OP_EQUALVERIFY OP_CHECKSIG"
     },
     {
-      "network": "bitcoin",
+      "network": "prod",
       "version": 5,
       "hash": "cd7b44d0b03f2d026d1e586d7ae18903b0d385f6",
       "base58check": "3LRW7jeCvQCRdPF8S3yUCfRAx4eqXFmdcr",
@@ -29,54 +29,39 @@
       "script": "OP_DUP OP_HASH160 6ac624143d19a3c91d2ac5605f0aebdfeac5b826 OP_EQUALVERIFY OP_CHECKSIG"
     },
     {
-      "network": "testnet",
+      "network": "dev",
       "version": 111,
       "hash": "751e76e8199196d454941c45d1b3a323f1433bd6",
       "base58check": "mrCDrCybB6J1vRfbwM5hemdJz73FwDBC8r",
       "script": "OP_DUP OP_HASH160 751e76e8199196d454941c45d1b3a323f1433bd6 OP_EQUALVERIFY OP_CHECKSIG"
     },
     {
-      "network": "testnet",
+      "network": "dev",
       "version": 196,
       "hash": "cd7b44d0b03f2d026d1e586d7ae18903b0d385f6",
       "base58check": "2NByiBUaEXrhmqAsg7BbLpcQSAQs1EDwt5w",
       "script": "OP_HASH160 cd7b44d0b03f2d026d1e586d7ae18903b0d385f6 OP_EQUAL"
     },
     {
-      "network": "bitcoin",
+      "network": "prod",
       "version": 0,
       "bech32": "BC1QW508D6QEJXTDG4Y5R3ZARVARY0C5XW7KV8F3T4",
       "data": "751e76e8199196d454941c45d1b3a323f1433bd6",
       "script": "OP_0 751e76e8199196d454941c45d1b3a323f1433bd6"
-
     },
     {
-      "network": "testnet",
+      "network": "dev",
       "version": 0,
       "bech32": "tb1qrp33g0q5c5txsp9arysrx4k6zdkfs4nce4xj0gdcccefvpysxf3q0sl5k7",
       "data": "1863143c14c5166804bd19203356da136c985678cd4d27a1b8c6329604903262",
       "script": "OP_0 1863143c14c5166804bd19203356da136c985678cd4d27a1b8c6329604903262"
     },
     {
-      "network": "testnet",
+      "network": "dev",
       "version": 0,
       "bech32": "tb1qqqqqp399et2xygdj5xreqhjjvcmzhxw4aywxecjdzew6hylgvsesrxh6hy",
       "data": "000000c4a5cad46221b2a187905e5266362b99d5e91c6ce24d165dab93e86433",
       "script": "OP_0 000000c4a5cad46221b2a187905e5266362b99d5e91c6ce24d165dab93e86433"
-    },
-    {
-      "network": "regtest",
-      "version": 0,
-      "bech32": "bcrt1qjh3dnrafy8f2zszh5sdqn6c3ycfljh930yza9nt72v30dkw8mlvscn82zx",
-      "data": "95e2d98fa921d2a14057a41a09eb112613f95cb17905d2cd7e5322f6d9c7dfd9",
-      "script": "OP_0 95e2d98fa921d2a14057a41a09eb112613f95cb17905d2cd7e5322f6d9c7dfd9"
-    },
-    {
-      "network": "regtest",
-      "version": 0,
-      "bech32": "bcrt1qqqqqqqqqqqqqqahrwf6d62emdxmpq8gu3xe9au9fjwc9sxxn4k2qujfh7u",
-      "data": "000000000000000076e37274dd2b3b69b6101d1c89b25ef0a993b05818d3ad94",
-      "script": "OP_0 000000000000000076e37274dd2b3b69b6101d1c89b25ef0a993b05818d3ad94"
     }
   ],
   "bech32": [

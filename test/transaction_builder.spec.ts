@@ -154,7 +154,7 @@ for (const useOldSignArgs of [false, true]) {
     describe('fromTransaction', () => {
       fixtures.valid.build.forEach(f => {
         it('returns TransactionBuilder, with ' + f.description, () => {
-          const network = (NETWORKS as any)[f.network || 'bitcoin'];
+          const network = (NETWORKS as any)[f.network || 'prod'];
 
           const tx = Transaction.fromHex(f.txHex);
           const txb = TransactionBuilder.fromTransaction(tx, network);
@@ -705,7 +705,7 @@ for (const useOldSignArgs of [false, true]) {
         ); // arbitrary P2SH input
         const inpTx = Transaction.fromBuffer(inp);
 
-        const txb = new TransactionBuilder(NETWORKS.testnet);
+        const txb = new TransactionBuilder(NETWORKS.dev);
         txb.addInput(inpTx, 0);
         txb.addOutput('2NAkqp5xffoomp5RLBcakuGpZ12GU4twdz4', 1e8); // arbitrary output
 
@@ -721,7 +721,7 @@ for (const useOldSignArgs of [false, true]) {
         );
         const inpTx = Transaction.fromBuffer(inp);
 
-        const txb = new TransactionBuilder(NETWORKS.testnet);
+        const txb = new TransactionBuilder(NETWORKS.dev);
         txb.addInput(inpTx, 0);
         txb.addOutput('2NAkqp5xffoomp5RLBcakuGpZ12GU4twdz4', 1e8); // arbitrary output
 
@@ -738,7 +738,7 @@ for (const useOldSignArgs of [false, true]) {
           ),
         );
 
-        const txb = new TransactionBuilder(NETWORKS.testnet);
+        const txb = new TransactionBuilder(NETWORKS.dev);
         txb.addInput(inpTx, 0);
         txb.addOutput('2NAkqp5xffoomp5RLBcakuGpZ12GU4twdz4', 1e8); // arbitrary output
 
@@ -795,7 +795,7 @@ for (const useOldSignArgs of [false, true]) {
     });
 
     describe('various edge case', () => {
-      const network = NETWORKS.testnet;
+      const network = NETWORKS.dev;
 
       it('should warn of high fee for segwit transaction based on VSize, not Size', () => {
         const rawtx =
@@ -919,7 +919,7 @@ for (const useOldSignArgs of [false, true]) {
         );
 
         // now import the Transaction
-        const txb = TransactionBuilder.fromTransaction(tx, NETWORKS.testnet);
+        const txb = TransactionBuilder.fromTransaction(tx, NETWORKS.dev);
 
         const keyPair2 = ECPair.fromWIF(
           '91avARGdfge8E4tZfYLoxeJ5sGBdNJQH4kvjJoQFacbgx3cTMqe',

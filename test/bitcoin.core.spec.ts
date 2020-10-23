@@ -48,9 +48,9 @@ describe('Bitcoin-core', () => {
 
       if (params.isPrivkey) return;
 
-      const network: any = params.isTestnet
-        ? bitcoin.networks.testnet
-        : bitcoin.networks.bitcoin;
+      const network: any = params.isDev
+        ? bitcoin.networks.dev
+        : bitcoin.networks.prod;
       const version = network[typeMap[params.addrType]];
 
       it('can export ' + expected, () => {
@@ -65,10 +65,10 @@ describe('Bitcoin-core', () => {
   // base58KeysInvalid
   describe('address.fromBase58Check', () => {
     const allowedNetworks = [
-      bitcoin.networks.bitcoin.pubKeyHash,
-      bitcoin.networks.bitcoin.scriptHash,
-      bitcoin.networks.testnet.pubKeyHash,
-      bitcoin.networks.testnet.scriptHash,
+      bitcoin.networks.prod.pubKeyHash,
+      bitcoin.networks.prod.scriptHash,
+      bitcoin.networks.dev.pubKeyHash,
+      bitcoin.networks.dev.scriptHash,
     ];
 
     base58KeysInvalid.forEach(f => {
@@ -97,9 +97,9 @@ describe('Bitcoin-core', () => {
 
       if (!params.isPrivkey) return;
 
-      const network = params.isTestnet
-        ? bitcoin.networks.testnet
-        : bitcoin.networks.bitcoin;
+      const network = params.isDev
+        ? bitcoin.networks.dev
+        : bitcoin.networks.prod;
       const keyPair = bitcoin.ECPair.fromWIF(strng, network);
 
       it('fromWIF imports ' + strng, () => {
@@ -115,10 +115,7 @@ describe('Bitcoin-core', () => {
 
   // base58KeysInvalid
   describe('ECPair.fromWIF', () => {
-    const allowedNetworks = [
-      bitcoin.networks.bitcoin,
-      bitcoin.networks.testnet,
-    ];
+    const allowedNetworks = [bitcoin.networks.prod, bitcoin.networks.dev];
 
     base58KeysInvalid.forEach(f => {
       const strng = f[0];

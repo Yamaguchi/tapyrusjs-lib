@@ -3,7 +3,7 @@ import { describe, it } from 'mocha';
 import * as bitcoin from '../..';
 import { regtestUtils } from './_regtest';
 const dhttp = regtestUtils.dhttp;
-const TESTNET = bitcoin.networks.testnet;
+const DEV = bitcoin.networks.dev;
 
 describe('bitcoinjs-lib (addresses)', () => {
   it(
@@ -13,7 +13,7 @@ describe('bitcoinjs-lib (addresses)', () => {
       const keyPair = bitcoin.ECPair.makeRandom();
       const { address } = bitcoin.payments.p2pkh({ pubkey: keyPair.publicKey });
 
-      // bitcoin P2PKH addresses start with a '1'
+      // prod P2PKH addresses start with a '1'
       assert.strictEqual(address!.startsWith('1'), true);
 
       const result = await dhttp({
@@ -102,14 +102,14 @@ describe('bitcoinjs-lib (addresses)', () => {
   });
 
   // examples using other network information
-  it('can generate a Testnet address', () => {
-    const keyPair = bitcoin.ECPair.makeRandom({ network: TESTNET });
+  it('can generate a Dev mode address', () => {
+    const keyPair = bitcoin.ECPair.makeRandom({ network: DEV });
     const { address } = bitcoin.payments.p2pkh({
       pubkey: keyPair.publicKey,
-      network: TESTNET,
+      network: DEV,
     });
 
-    // bitcoin testnet P2PKH addresses start with a 'm' or 'n'
+    // dev mode P2PKH addresses start with a 'm' or 'n'
     assert.strictEqual(
       address!.startsWith('m') || address!.startsWith('n'),
       true,
