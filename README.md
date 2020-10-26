@@ -96,7 +96,6 @@ Some examples interact (via HTTPS) with a 3rd Party Blockchain Provider (3PBP).
 - [Generate a 2-of-3 P2SH multisig address](https://github.com/chaintope/tapyrusjs-lib/blob/master/test/integration/addresses.spec.ts)
 - [Support the retrieval of transactions for an address (3rd party blockchain)](https://github.com/chaintope/tapyrusjs-lib/blob/master/test/integration/addresses.spec.ts)
 - [Generate a Testnet address](https://github.com/chaintope/tapyrusjs-lib/blob/master/test/integration/addresses.spec.ts)
-- [Generate a Litecoin address](https://github.com/chaintope/tapyrusjs-lib/blob/master/test/integration/addresses.spec.ts)
 - [Create a 1-to-1 Transaction](https://github.com/chaintope/tapyrusjs-lib/blob/master/test/integration/transactions.spec.ts)
 - [Create (and broadcast via 3PBP) a typical Transaction](https://github.com/chaintope/tapyrusjs-lib/blob/master/test/integration/transactions.spec.ts)
 - [Create (and broadcast via 3PBP) a Transaction with an OP_RETURN output](https://github.com/chaintope/tapyrusjs-lib/blob/master/test/integration/transactions.spec.ts)
