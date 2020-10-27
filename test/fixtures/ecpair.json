@@ -117,7 +117,7 @@
     "fromWIF": [
       {
         "exception": "Invalid network version",
-        "network": "bitoin",
+        "network": "prod",
         "WIF": "92Qba5hnyWSn5Ffcka56yMQauaWY6ZLd91Vzxbi4a9CCetaHtYj"
       },
       {
