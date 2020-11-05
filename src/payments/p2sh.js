@@ -4,15 +4,10 @@ const bcrypto = require('../crypto');
 const networks_1 = require('../networks');
 const bscript = require('../script');
 const lazy = require('./lazy');
+const util_1 = require('./util');
 const typef = require('typeforce');
 const OPS = bscript.OPS;
 const bs58check = require('bs58check');
-function stacksEqual(a, b) {
-  if (a.length !== b.length) return false;
-  return a.every((x, i) => {
-    return x.equals(b[i]);
-  });
-}
 // input: [redeemScriptSig ...] {redeemScript}
 // witness: <?>
 // output: OP_HASH160 {hash160(redeemScript)} OP_EQUAL
@@ -125,59 +120,14 @@ function p2sh(a, opts) {
         throw new TypeError('Hash mismatch');
       else hash = hash2;
     }
-    // inlined to prevent 'no-inner-declarations' failing
-    const checkRedeem = redeem => {
-      // is the redeem output empty/invalid?
-      if (redeem.output) {
-        const decompile = bscript.decompile(redeem.output);
-        if (!decompile || decompile.length < 1)
-          throw new TypeError('Redeem.output too short');
-        // match hash against other sources
-        const hash2 = bcrypto.hash160(redeem.output);
-        if (hash.length > 0 && !hash.equals(hash2))
-          throw new TypeError('Hash mismatch');
-        else hash = hash2;
-      }
-      if (redeem.input) {
-        const hasInput = redeem.input.length > 0;
-        const hasWitness = redeem.witness && redeem.witness.length > 0;
-        if (!hasInput && !hasWitness) throw new TypeError('Empty input');
-        if (hasInput && hasWitness)
-          throw new TypeError('Input and witness provided');
-        if (hasInput) {
-          const richunks = bscript.decompile(redeem.input);
-          if (!bscript.isPushOnly(richunks))
-            throw new TypeError('Non push-only scriptSig');
-        }
-      }
-    };
     if (a.input) {
-      const chunks = _chunks();
-      if (!chunks || chunks.length < 1) throw new TypeError('Input too short');
-      if (!Buffer.isBuffer(_redeem().output))
-        throw new TypeError('Input is invalid');
-      checkRedeem(_redeem());
-    }
-    if (a.redeem) {
-      if (a.redeem.network && a.redeem.network !== network)
-        throw new TypeError('Network mismatch');
-      if (a.input) {
-        const redeem = _redeem();
-        if (a.redeem.output && !a.redeem.output.equals(redeem.output))
-          throw new TypeError('Redeem.output mismatch');
-        if (a.redeem.input && !a.redeem.input.equals(redeem.input))
-          throw new TypeError('Redeem.input mismatch');
+      const hash2 = util_1.checkInput(_chunks, _redeem, hash);
+      if (hash2) {
+        hash = hash2;
       }
-      checkRedeem(a.redeem);
     }
-    if (a.witness) {
-      if (
-        a.redeem &&
-        a.redeem.witness &&
-        !stacksEqual(a.redeem.witness, a.witness)
-      )
-        throw new TypeError('Witness and redeem.witness mismatch');
-    }
+    util_1.checkRedeem(a, network, _redeem, hash);
+    util_1.checkWitness(a);
   }
   return Object.assign(o, a);
 }

@@ -3,6 +3,8 @@ import { prod as PROD_NETWORK } from '../networks';
 import * as bscript from '../script';
 import { Payment, PaymentOpts, StackFunction } from './index';
 import * as lazy from './lazy';
+import { validColorId } from './util';
+
 const typef = require('typeforce');
 const OPS = bscript.OPS;
 const ecc = require('tiny-secp256k1');
@@ -115,9 +117,7 @@ export function cp2pkh(a: Payment, opts?: PaymentOpts): Payment {
     }
 
     if (a.colorId) {
-      if (colorId.length > 0 && !colorId.equals(a.colorId))
-        throw new TypeError('ColorId mismatch');
-      else colorId = a.colorId;
+      colorId = validColorId(colorId, a.colorId!);
     }
 
     if (a.output) {
@@ -134,8 +134,7 @@ export function cp2pkh(a: Payment, opts?: PaymentOpts): Payment {
         throw new TypeError('Output is invalid');
 
       const colorId2 = a.output.slice(1, 34);
-      if (colorId.length > 0 && !colorId.equals(colorId2))
-        throw new TypeError('ColorId mismatch');
+      validColorId(colorId, colorId2);
       const hash2 = a.output.slice(38, 58);
       if (hash.length > 0 && !hash.equals(hash2))
         throw new TypeError('Hash mismatch');

@@ -9,18 +9,11 @@ import {
   StackFunction,
 } from './index';
 import * as lazy from './lazy';
+import { checkInput, checkRedeem, checkWitness, validColorId } from './util';
 const typef = require('typeforce');
 const OPS = bscript.OPS;
 
 const bs58check = require('bs58check');
-
-function stacksEqual(a: Buffer[], b: Buffer[]): boolean {
-  if (a.length !== b.length) return false;
-
-  return a.every((x, i) => {
-    return x.equals(b[i]);
-  });
-}
 
 // input: [redeemScriptSig ...] {redeemScript}
 // witness: <?>
@@ -158,9 +151,7 @@ export function cp2sh(a: Payment, opts?: PaymentOpts): Payment {
     }
 
     if (a.colorId) {
-      if (colorId.length > 0 && !colorId.equals(a.colorId))
-        throw new TypeError('ColorId mismatch');
-      else colorId = a.colorId;
+      colorId = validColorId(colorId, a.colorId!);
     }
 
     if (a.output) {
@@ -175,74 +166,24 @@ export function cp2sh(a: Payment, opts?: PaymentOpts): Payment {
         throw new TypeError('Output is invalid');
 
       const colorId2 = a.output.slice(1, 34);
-      if (colorId.length > 0 && !colorId.equals(colorId2))
-        throw new TypeError('ColorId mismatch');
+      validColorId(colorId, colorId2);
 
       const hash2 = a.output.slice(37, 57);
       if (hash.length > 0 && !hash.equals(hash2))
         throw new TypeError('Hash mismatch');
       else hash = hash2;
     }
-    // inlined to prevent 'no-inner-declarations' failing
-    const checkRedeem = (redeem: Payment): void => {
-      // is the redeem output empty/invalid?
-      if (redeem.output) {
-        const decompile = bscript.decompile(redeem.output);
-        if (!decompile || decompile.length < 1)
-          throw new TypeError('Redeem.output too short');
-
-        // match hash against other sources
-        const hash2 = bcrypto.hash160(redeem.output);
-        if (hash.length > 0 && !hash.equals(hash2))
-          throw new TypeError('Hash mismatch');
-        else hash = hash2;
-      }
-
-      if (redeem.input) {
-        const hasInput = redeem.input.length > 0;
-        const hasWitness = redeem.witness && redeem.witness.length > 0;
-        if (!hasInput && !hasWitness) throw new TypeError('Empty input');
-        if (hasInput && hasWitness)
-          throw new TypeError('Input and witness provided');
-        if (hasInput) {
-          const richunks = bscript.decompile(redeem.input) as Stack;
-          if (!bscript.isPushOnly(richunks))
-            throw new TypeError('Non push-only scriptSig');
-        }
-      }
-    };
 
     if (a.input) {
-      const chunks = _chunks();
-      if (!chunks || chunks.length < 1) throw new TypeError('Input too short');
-      if (!Buffer.isBuffer(_redeem().output))
-        throw new TypeError('Input is invalid');
-
-      checkRedeem(_redeem());
-    }
-
-    if (a.redeem) {
-      if (a.redeem.network && a.redeem.network !== network)
-        throw new TypeError('Network mismatch');
-      if (a.input) {
-        const redeem = _redeem();
-        if (a.redeem.output && !a.redeem.output.equals(redeem.output!))
-          throw new TypeError('Redeem.output mismatch');
-        if (a.redeem.input && !a.redeem.input.equals(redeem.input!))
-          throw new TypeError('Redeem.input mismatch');
+      const hash2 = checkInput(_chunks, _redeem, hash);
+      if (hash2) {
+        hash = hash2;
       }
-
-      checkRedeem(a.redeem);
     }
 
-    if (a.witness) {
-      if (
-        a.redeem &&
-        a.redeem.witness &&
-        !stacksEqual(a.redeem.witness, a.witness)
-      )
-        throw new TypeError('Witness and redeem.witness mismatch');
-    }
+    checkRedeem(a, network, _redeem, hash);
+
+    checkWitness(a);
   }
 
   return Object.assign(o, a);

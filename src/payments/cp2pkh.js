@@ -4,6 +4,7 @@ const bcrypto = require('../crypto');
 const networks_1 = require('../networks');
 const bscript = require('../script');
 const lazy = require('./lazy');
+const util_1 = require('./util');
 const typef = require('typeforce');
 const OPS = bscript.OPS;
 const ecc = require('tiny-secp256k1');
@@ -106,9 +107,7 @@ function cp2pkh(a, opts) {
       else hash = a.hash;
     }
     if (a.colorId) {
-      if (colorId.length > 0 && !colorId.equals(a.colorId))
-        throw new TypeError('ColorId mismatch');
-      else colorId = a.colorId;
+      colorId = util_1.validColorId(colorId, a.colorId);
     }
     if (a.output) {
       if (
@@ -123,8 +122,7 @@ function cp2pkh(a, opts) {
       )
         throw new TypeError('Output is invalid');
       const colorId2 = a.output.slice(1, 34);
-      if (colorId.length > 0 && !colorId.equals(colorId2))
-        throw new TypeError('ColorId mismatch');
+      util_1.validColorId(colorId, colorId2);
       const hash2 = a.output.slice(38, 58);
       if (hash.length > 0 && !hash.equals(hash2))
         throw new TypeError('Hash mismatch');
