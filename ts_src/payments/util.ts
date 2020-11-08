@@ -38,7 +38,7 @@ export function validColorId(colorId: Buffer, newColorId: Buffer): Buffer {
   return newColorId;
 }
 
-function stacksEqual(a: Buffer[], b: Buffer[]): boolean {
+export function stacksEqual(a: Buffer[], b: Buffer[]): boolean {
   if (a.length !== b.length) return false;
 
   return a.every((x, i) => {

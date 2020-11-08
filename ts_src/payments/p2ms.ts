@@ -2,19 +2,13 @@ import { prod as PROD_NETWORK } from '../networks';
 import * as bscript from '../script';
 import { Payment, PaymentOpts, Stack } from './index';
 import * as lazy from './lazy';
+import { stacksEqual } from './util';
+
 const OPS = bscript.OPS;
 const typef = require('typeforce');
 const ecc = require('tiny-secp256k1');
 
 const OP_INT_BASE = OPS.OP_RESERVED; // OP_1 - 1
-
-function stacksEqual(a: Buffer[], b: Buffer[]): boolean {
-  if (a.length !== b.length) return false;
-
-  return a.every((x, i) => {
-    return x.equals(b[i]);
-  });
-}
 
 // input: OP_0 [signatures ...]
 // output: m [pubKeys ...] n OP_CHECKMULTISIG

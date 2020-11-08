@@ -3,6 +3,7 @@ Object.defineProperty(exports, '__esModule', { value: true });
 const networks_1 = require('../networks');
 const bscript = require('../script');
 const lazy = require('./lazy');
+const util_1 = require('./util');
 const typef = require('typeforce');
 const OPS = bscript.OPS;
 const ecc = require('tiny-secp256k1');
@@ -22,9 +23,6 @@ function p2pk(a, opts) {
     },
     a,
   );
-  const _chunks = lazy.value(() => {
-    return bscript.decompile(a.input);
-  });
   const network = a.network || networks_1.prod;
   const o = { name: 'p2pk', network };
   lazy.prop(o, 'output', () => {
@@ -37,7 +35,7 @@ function p2pk(a, opts) {
   });
   lazy.prop(o, 'signature', () => {
     if (!a.input) return;
-    return _chunks()[0];
+    return util_1.chunksFn(a.input)()[0];
   });
   lazy.prop(o, 'input', () => {
     if (!a.signature) return;
@@ -62,7 +60,8 @@ function p2pk(a, opts) {
         throw new TypeError('Signature mismatch');
     }
     if (a.input) {
-      if (_chunks().length !== 1) throw new TypeError('Input is invalid');
+      if (util_1.chunksFn(a.input)().length !== 1)
+        throw new TypeError('Input is invalid');
       if (!bscript.isCanonicalScriptSignature(o.signature))
         throw new TypeError('Input has invalid signature');
     }

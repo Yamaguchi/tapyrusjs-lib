@@ -3,16 +3,11 @@ Object.defineProperty(exports, '__esModule', { value: true });
 const networks_1 = require('../networks');
 const bscript = require('../script');
 const lazy = require('./lazy');
+const util_1 = require('./util');
 const OPS = bscript.OPS;
 const typef = require('typeforce');
 const ecc = require('tiny-secp256k1');
 const OP_INT_BASE = OPS.OP_RESERVED; // OP_1 - 1
-function stacksEqual(a, b) {
-  if (a.length !== b.length) return false;
-  return a.every((x, i) => {
-    return x.equals(b[i]);
-  });
-}
 // input: OP_0 [signatures ...]
 // output: m [pubKeys ...] n OP_CHECKMULTISIG
 function p2ms(a, opts) {
@@ -112,7 +107,7 @@ function p2ms(a, opts) {
         throw new TypeError('Output is invalid');
       if (a.m !== undefined && a.m !== o.m) throw new TypeError('m mismatch');
       if (a.n !== undefined && a.n !== o.n) throw new TypeError('n mismatch');
-      if (a.pubkeys && !stacksEqual(a.pubkeys, o.pubkeys))
+      if (a.pubkeys && !util_1.stacksEqual(a.pubkeys, o.pubkeys))
         throw new TypeError('Pubkeys mismatch');
     }
     if (a.pubkeys) {
@@ -134,7 +129,7 @@ function p2ms(a, opts) {
         !o.signatures.every(isAcceptableSignature)
       )
         throw new TypeError('Input has invalid signature(s)');
-      if (a.signatures && !stacksEqual(a.signatures, o.signatures))
+      if (a.signatures && !util_1.stacksEqual(a.signatures, o.signatures))
         throw new TypeError('Signature mismatch');
       if (a.m !== undefined && a.m !== a.signatures.length)
         throw new TypeError('Signature count mismatch');

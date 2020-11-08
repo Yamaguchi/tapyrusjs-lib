@@ -2,17 +2,10 @@ import { prod as PROD_NETWORK } from '../networks';
 import * as bscript from '../script';
 import { Payment, PaymentOpts, Stack } from './index';
 import * as lazy from './lazy';
+import { stacksEqual } from './util';
 
 const typef = require('typeforce');
 const OPS = bscript.OPS;
-
-function stacksEqual(a: Buffer[], b: Buffer[]): boolean {
-  if (a.length !== b.length) return false;
-
-  return a.every((x, i) => {
-    return x.equals(b[i]);
-  });
-}
 
 // output: OP_RETURN ...
 export function p2data(a: Payment, opts?: PaymentOpts): Payment {

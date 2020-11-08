@@ -38,6 +38,7 @@ function stacksEqual(a, b) {
     return x.equals(b[i]);
   });
 }
+exports.stacksEqual = stacksEqual;
 function checkInput(_chunksFn, _redeemFn, hashForCheck) {
   const chunks = _chunksFn();
   if (!chunks || chunks.length < 1) throw new TypeError('Input too short');

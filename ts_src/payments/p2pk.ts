@@ -1,7 +1,8 @@
 import { prod as PROD_NETWORK } from '../networks';
 import * as bscript from '../script';
-import { Payment, PaymentOpts, StackFunction } from './index';
+import { Payment, PaymentOpts } from './index';
 import * as lazy from './lazy';
+import { chunksFn } from './util';
 const typef = require('typeforce');
 const OPS = bscript.OPS;
 const ecc = require('tiny-secp256k1');
@@ -25,10 +26,6 @@ export function p2pk(a: Payment, opts?: PaymentOpts): Payment {
     a,
   );
 
-  const _chunks = lazy.value(() => {
-    return bscript.decompile(a.input!);
-  }) as StackFunction;
-
   const network = a.network || PROD_NETWORK;
   const o: Payment = { name: 'p2pk', network };
 
@@ -42,7 +39,7 @@ export function p2pk(a: Payment, opts?: PaymentOpts): Payment {
   });
   lazy.prop(o, 'signature', () => {
     if (!a.input) return;
-    return _chunks()[0] as Buffer;
+    return chunksFn(a.input!)()[0] as Buffer;
   });
   lazy.prop(o, 'input', () => {
     if (!a.signature) return;
@@ -70,7 +67,8 @@ export function p2pk(a: Payment, opts?: PaymentOpts): Payment {
     }
 
     if (a.input) {
-      if (_chunks().length !== 1) throw new TypeError('Input is invalid');
+      if (chunksFn(a.input!)().length !== 1)
+        throw new TypeError('Input is invalid');
       if (!bscript.isCanonicalScriptSignature(o.signature!))
         throw new TypeError('Input has invalid signature');
     }
