@@ -1,15 +1,16 @@
 import * as bcrypto from '../crypto';
 import { prod as PROD_NETWORK } from '../networks';
 import * as bscript from '../script';
-import {
-  Payment,
-  PaymentFunction,
-  PaymentOpts,
-  Stack,
-  StackFunction,
-} from './index';
+import { Payment, PaymentOpts, Stack } from './index';
 import * as lazy from './lazy';
-import { checkInput, checkRedeem, checkWitness } from './util';
+import {
+  checkHash,
+  checkInput,
+  checkRedeem,
+  checkWitness,
+  chunksFn,
+  redeemFn,
+} from './util';
 const typef = require('typeforce');
 const OPS = bscript.OPS;
 
@@ -56,20 +57,6 @@ export function p2sh(a: Payment, opts?: PaymentOpts): Payment {
     const hash = payload.slice(1);
     return { version, hash };
   });
-  const _chunks = lazy.value(() => {
-    return bscript.decompile(a.input!);
-  }) as StackFunction;
-  const _redeem = lazy.value(
-    (): Payment => {
-      const chunks = _chunks();
-      return {
-        network,
-        output: chunks[chunks.length - 1] as Buffer,
-        input: bscript.compile(chunks.slice(0, -1)),
-        witness: a.witness || [],
-      };
-    },
-  ) as PaymentFunction;
 
   // output dependents
   lazy.prop(o, 'address', () => {
@@ -94,7 +81,7 @@ export function p2sh(a: Payment, opts?: PaymentOpts): Payment {
   // input dependents
   lazy.prop(o, 'redeem', () => {
     if (!a.input) return;
-    return _redeem();
+    return redeemFn(a, network)();
   });
   lazy.prop(o, 'input', () => {
     if (!a.redeem || !a.redeem.input || !a.redeem.output) return;
@@ -126,9 +113,8 @@ export function p2sh(a: Payment, opts?: PaymentOpts): Payment {
     }
 
     if (a.hash) {
-      if (hash.length > 0 && !hash.equals(a.hash))
-        throw new TypeError('Hash mismatch');
-      else hash = a.hash;
+      checkHash(hash, a.hash);
+      hash = a.hash;
     }
 
     if (a.output) {
@@ -141,19 +127,18 @@ export function p2sh(a: Payment, opts?: PaymentOpts): Payment {
         throw new TypeError('Output is invalid');
 
       const hash2 = a.output.slice(2, 22);
-      if (hash.length > 0 && !hash.equals(hash2))
-        throw new TypeError('Hash mismatch');
-      else hash = hash2;
+      checkHash(hash, hash2);
+      hash = hash2;
     }
 
     if (a.input) {
-      const hash2 = checkInput(_chunks, _redeem, hash);
+      const hash2 = checkInput(chunksFn(a.input), redeemFn(a, network), hash);
       if (hash2) {
         hash = hash2;
       }
     }
 
-    checkRedeem(a, network, _redeem, hash);
+    checkRedeem(a, network, redeemFn(a, network), hash);
 
     checkWitness(a);
   }

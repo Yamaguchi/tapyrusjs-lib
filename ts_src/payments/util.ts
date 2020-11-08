@@ -2,6 +2,35 @@ import * as bcrypto from '../crypto';
 import { Network } from '../networks';
 import * as bscript from '../script';
 import { Payment, PaymentFunction, Stack, StackFunction } from './index';
+import * as lazy from './lazy';
+
+export function chunksFn(script: Buffer): StackFunction {
+  return lazy.value(() => {
+    return bscript.decompile(script);
+  }) as StackFunction;
+}
+
+export function redeemFn(
+  a: Payment,
+  network: Network | undefined,
+): PaymentFunction {
+  return lazy.value(
+    (): Payment => {
+      const chunks = chunksFn(a.input!)();
+      return {
+        network,
+        output: chunks[chunks.length - 1] as Buffer,
+        input: bscript.compile(chunks.slice(0, -1)),
+        witness: a.witness || [],
+      };
+    },
+  ) as PaymentFunction;
+}
+
+export function checkHash(hash: Buffer, hash2: Buffer): void {
+  if (hash.length > 0 && !hash.equals(hash2))
+    throw new TypeError('Hash mismatch');
+}
 
 export function validColorId(colorId: Buffer, newColorId: Buffer): Buffer {
   if (colorId.length > 0 && !colorId.equals(newColorId))
@@ -18,13 +47,13 @@ function stacksEqual(a: Buffer[], b: Buffer[]): boolean {
 }
 
 export function checkInput(
-  chunksFn: StackFunction,
-  redeemFn: PaymentFunction,
+  _chunksFn: StackFunction,
+  _redeemFn: PaymentFunction,
   hashForCheck: Buffer,
 ): Buffer | null {
-  const chunks = chunksFn();
+  const chunks = _chunksFn();
   if (!chunks || chunks.length < 1) throw new TypeError('Input too short');
-  const redeem = redeemFn();
+  const redeem = _redeemFn();
   if (!Buffer.isBuffer(redeem.output)) throw new TypeError('Input is invalid');
 
   return _checkRedeem(redeem, hashForCheck);
@@ -44,14 +73,14 @@ export function checkWitness(a: Payment): void {
 export function checkRedeem(
   a: Payment,
   network: Network,
-  redeemFn: PaymentFunction,
+  _redeemFn: PaymentFunction,
   hashForCheck: Buffer,
 ): void {
   if (a.redeem) {
     if (a.redeem.network && a.redeem.network !== network)
       throw new TypeError('Network mismatch');
     if (a.input) {
-      const redeem = redeemFn();
+      const redeem = _redeemFn();
       if (a.redeem.output && !a.redeem.output.equals(redeem.output!))
         throw new TypeError('Redeem.output mismatch');
       if (a.redeem.input && !a.redeem.input.equals(redeem.input!))

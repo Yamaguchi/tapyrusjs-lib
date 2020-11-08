@@ -2,6 +2,30 @@
 Object.defineProperty(exports, '__esModule', { value: true });
 const bcrypto = require('../crypto');
 const bscript = require('../script');
+const lazy = require('./lazy');
+function chunksFn(script) {
+  return lazy.value(() => {
+    return bscript.decompile(script);
+  });
+}
+exports.chunksFn = chunksFn;
+function redeemFn(a, network) {
+  return lazy.value(() => {
+    const chunks = chunksFn(a.input)();
+    return {
+      network,
+      output: chunks[chunks.length - 1],
+      input: bscript.compile(chunks.slice(0, -1)),
+      witness: a.witness || [],
+    };
+  });
+}
+exports.redeemFn = redeemFn;
+function checkHash(hash, hash2) {
+  if (hash.length > 0 && !hash.equals(hash2))
+    throw new TypeError('Hash mismatch');
+}
+exports.checkHash = checkHash;
 function validColorId(colorId, newColorId) {
   if (colorId.length > 0 && !colorId.equals(newColorId))
     throw new TypeError('ColorId mismatch');
@@ -14,10 +38,10 @@ function stacksEqual(a, b) {
     return x.equals(b[i]);
   });
 }
-function checkInput(chunksFn, redeemFn, hashForCheck) {
-  const chunks = chunksFn();
+function checkInput(_chunksFn, _redeemFn, hashForCheck) {
+  const chunks = _chunksFn();
   if (!chunks || chunks.length < 1) throw new TypeError('Input too short');
-  const redeem = redeemFn();
+  const redeem = _redeemFn();
   if (!Buffer.isBuffer(redeem.output)) throw new TypeError('Input is invalid');
   return _checkRedeem(redeem, hashForCheck);
 }
@@ -33,12 +57,12 @@ function checkWitness(a) {
   }
 }
 exports.checkWitness = checkWitness;
-function checkRedeem(a, network, redeemFn, hashForCheck) {
+function checkRedeem(a, network, _redeemFn, hashForCheck) {
   if (a.redeem) {
     if (a.redeem.network && a.redeem.network !== network)
       throw new TypeError('Network mismatch');
     if (a.input) {
-      const redeem = redeemFn();
+      const redeem = _redeemFn();
       if (a.redeem.output && !a.redeem.output.equals(redeem.output))
         throw new TypeError('Redeem.output mismatch');
       if (a.redeem.input && !a.redeem.input.equals(redeem.input))

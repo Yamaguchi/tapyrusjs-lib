@@ -1,8 +1,10 @@
 import * as bcrypto from '../crypto';
 import { prod as PROD_NETWORK } from '../networks';
 import * as bscript from '../script';
-import { Payment, PaymentOpts, StackFunction } from './index';
+import { Payment, PaymentOpts } from './index';
 import * as lazy from './lazy';
+import { chunksFn } from './util';
+
 const typef = require('typeforce');
 const OPS = bscript.OPS;
 const ecc = require('tiny-secp256k1');
@@ -36,9 +38,6 @@ export function p2pkh(a: Payment, opts?: PaymentOpts): Payment {
     const hash = payload.slice(1);
     return { version, hash };
   });
-  const _chunks = lazy.value(() => {
-    return bscript.decompile(a.input!);
-  }) as StackFunction;
 
   const network = a.network || PROD_NETWORK;
   const o: Payment = { name: 'p2pkh', network };
@@ -68,11 +67,11 @@ export function p2pkh(a: Payment, opts?: PaymentOpts): Payment {
   });
   lazy.prop(o, 'pubkey', () => {
     if (!a.input) return;
-    return _chunks()[1] as Buffer;
+    return chunksFn(a.input!)()[1] as Buffer;
   });
   lazy.prop(o, 'signature', () => {
     if (!a.input) return;
-    return _chunks()[0] as Buffer;
+    return chunksFn(a.input!)()[0] as Buffer;
   });
   lazy.prop(o, 'input', () => {
     if (!a.pubkey) return;
@@ -125,7 +124,7 @@ export function p2pkh(a: Payment, opts?: PaymentOpts): Payment {
     }
 
     if (a.input) {
-      const chunks = _chunks();
+      const chunks = chunksFn(a.input!)();
       if (chunks.length !== 2) throw new TypeError('Input is invalid');
       if (!bscript.isCanonicalScriptSignature(chunks[0] as Buffer))
         throw new TypeError('Input has invalid signature');

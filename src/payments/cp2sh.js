@@ -45,18 +45,6 @@ function cp2sh(a, opts) {
     const hash = payload.slice(34);
     return { version, colorId, hash };
   });
-  const _chunks = lazy.value(() => {
-    return bscript.decompile(a.input);
-  });
-  const _redeem = lazy.value(() => {
-    const chunks = _chunks();
-    return {
-      network,
-      output: chunks[chunks.length - 1],
-      input: bscript.compile(chunks.slice(0, -1)),
-      witness: a.witness || [],
-    };
-  });
   // output dependents
   lazy.prop(o, 'address', () => {
     if (!o.hash) return;
@@ -87,7 +75,7 @@ function cp2sh(a, opts) {
   // input dependents
   lazy.prop(o, 'redeem', () => {
     if (!a.input) return;
-    return _redeem();
+    return util_1.redeemFn(a, network)();
   });
   lazy.prop(o, 'input', () => {
     if (!a.redeem || !a.redeem.input || !a.redeem.output) return;
@@ -122,9 +110,8 @@ function cp2sh(a, opts) {
       colorId = _address().colorId;
     }
     if (a.hash) {
-      if (hash.length > 0 && !hash.equals(a.hash))
-        throw new TypeError('Hash mismatch');
-      else hash = a.hash;
+      util_1.checkHash(hash, a.hash);
+      hash = a.hash;
     }
     if (a.colorId) {
       colorId = util_1.validColorId(colorId, a.colorId);
@@ -142,17 +129,20 @@ function cp2sh(a, opts) {
       const colorId2 = a.output.slice(1, 34);
       util_1.validColorId(colorId, colorId2);
       const hash2 = a.output.slice(37, 57);
-      if (hash.length > 0 && !hash.equals(hash2))
-        throw new TypeError('Hash mismatch');
-      else hash = hash2;
+      util_1.checkHash(hash, hash2);
+      hash = hash2;
     }
     if (a.input) {
-      const hash2 = util_1.checkInput(_chunks, _redeem, hash);
+      const hash2 = util_1.checkInput(
+        util_1.chunksFn(a.input),
+        util_1.redeemFn(a, network),
+        hash,
+      );
       if (hash2) {
         hash = hash2;
       }
     }
-    util_1.checkRedeem(a, network, _redeem, hash);
+    util_1.checkRedeem(a, network, util_1.redeemFn(a, network), hash);
     util_1.checkWitness(a);
   }
   return Object.assign(o, a);

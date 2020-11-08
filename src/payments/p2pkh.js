@@ -4,6 +4,7 @@ const bcrypto = require('../crypto');
 const networks_1 = require('../networks');
 const bscript = require('../script');
 const lazy = require('./lazy');
+const util_1 = require('./util');
 const typef = require('typeforce');
 const OPS = bscript.OPS;
 const ecc = require('tiny-secp256k1');
@@ -32,9 +33,6 @@ function p2pkh(a, opts) {
     const hash = payload.slice(1);
     return { version, hash };
   });
-  const _chunks = lazy.value(() => {
-    return bscript.decompile(a.input);
-  });
   const network = a.network || networks_1.prod;
   const o = { name: 'p2pkh', network };
   lazy.prop(o, 'address', () => {
@@ -61,11 +59,11 @@ function p2pkh(a, opts) {
   });
   lazy.prop(o, 'pubkey', () => {
     if (!a.input) return;
-    return _chunks()[1];
+    return util_1.chunksFn(a.input)()[1];
   });
   lazy.prop(o, 'signature', () => {
     if (!a.input) return;
-    return _chunks()[0];
+    return util_1.chunksFn(a.input)()[0];
   });
   lazy.prop(o, 'input', () => {
     if (!a.pubkey) return;
@@ -112,7 +110,7 @@ function p2pkh(a, opts) {
       else hash = pkh;
     }
     if (a.input) {
-      const chunks = _chunks();
+      const chunks = util_1.chunksFn(a.input)();
       if (chunks.length !== 2) throw new TypeError('Input is invalid');
       if (!bscript.isCanonicalScriptSignature(chunks[0]))
         throw new TypeError('Input has invalid signature');
