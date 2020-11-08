@@ -27,12 +27,7 @@ function p2pkh(a, opts) {
     },
     a,
   );
-  const _address = lazy.value(() => {
-    const payload = bs58check.decode(a.address);
-    const version = payload.readUInt8(0);
-    const hash = payload.slice(1);
-    return { version, hash };
-  });
+  const _address = util_1.addressFn(a.address);
   const network = a.network || networks_1.prod;
   const o = { name: 'p2pkh', network };
   lazy.prop(o, 'address', () => {

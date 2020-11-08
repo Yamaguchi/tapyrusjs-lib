@@ -3,6 +3,26 @@ Object.defineProperty(exports, '__esModule', { value: true });
 const bcrypto = require('../crypto');
 const bscript = require('../script');
 const lazy = require('./lazy');
+const bs58check = require('bs58check');
+function addressFn(address) {
+  return lazy.value(() => {
+    const payload = bs58check.decode(address);
+    const version = payload.readUInt8(0);
+    const hash = payload.slice(1);
+    return { version, hash };
+  });
+}
+exports.addressFn = addressFn;
+function coloredAddressFn(address) {
+  return lazy.value(() => {
+    const payload = bs58check.decode(address);
+    const version = payload.readUInt8(0);
+    const colorId = payload.slice(1, 34);
+    const hash = payload.slice(34);
+    return { version, colorId, hash };
+  });
+}
+exports.coloredAddressFn = coloredAddressFn;
 function chunksFn(script) {
   return lazy.value(() => {
     return bscript.decompile(script);

@@ -28,13 +28,7 @@ function cp2pkh(a, opts) {
     },
     a,
   );
-  const _address = lazy.value(() => {
-    const payload = bs58check.decode(a.address);
-    const version = payload.readUInt8(0);
-    const colorId = payload.slice(1, 34);
-    const hash = payload.slice(34);
-    return { version, colorId, hash };
-  });
+  const _address = util_1.coloredAddressFn(a.address);
   const network = a.network || networks_1.prod;
   const o = { name: 'cp2pkh', network };
   lazy.prop(o, 'address', () => {

@@ -3,7 +3,7 @@ import { prod as PROD_NETWORK } from '../networks';
 import * as bscript from '../script';
 import { Payment, PaymentOpts } from './index';
 import * as lazy from './lazy';
-import { checkHash, chunksFn, validColorId } from './util';
+import { checkHash, chunksFn, coloredAddressFn, validColorId } from './util';
 
 const typef = require('typeforce');
 const OPS = bscript.OPS;
@@ -32,13 +32,7 @@ export function cp2pkh(a: Payment, opts?: PaymentOpts): Payment {
     a,
   );
 
-  const _address = lazy.value(() => {
-    const payload = bs58check.decode(a.address);
-    const version = payload.readUInt8(0);
-    const colorId = payload.slice(1, 34);
-    const hash = payload.slice(34);
-    return { version, colorId, hash };
-  });
+  const _address = coloredAddressFn(a.address!);
 
   const network = a.network || PROD_NETWORK;
   const o: Payment = { name: 'cp2pkh', network };

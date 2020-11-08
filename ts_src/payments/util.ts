@@ -3,6 +3,33 @@ import { Network } from '../networks';
 import * as bscript from '../script';
 import { Payment, PaymentFunction, Stack, StackFunction } from './index';
 import * as lazy from './lazy';
+const bs58check = require('bs58check');
+
+export function addressFn(
+  address: string,
+): () => { version: number; hash: Buffer } {
+  return lazy.value(() => {
+    const payload = bs58check.decode(address);
+    const version = payload.readUInt8(0);
+    const hash = payload.slice(1);
+    return { version, hash };
+  });
+}
+export function coloredAddressFn(
+  address: string,
+): () => {
+  version: number;
+  colorId: Buffer;
+  hash: Buffer;
+} {
+  return lazy.value(() => {
+    const payload = bs58check.decode(address);
+    const version = payload.readUInt8(0);
+    const colorId = payload.slice(1, 34);
+    const hash = payload.slice(34);
+    return { version, colorId, hash };
+  });
+}
 
 export function chunksFn(script: Buffer): StackFunction {
   return lazy.value(() => {

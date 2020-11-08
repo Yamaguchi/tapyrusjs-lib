@@ -38,13 +38,7 @@ function cp2sh(a, opts) {
     network = (a.redeem && a.redeem.network) || networks_1.prod;
   }
   const o = { network };
-  const _address = lazy.value(() => {
-    const payload = bs58check.decode(a.address);
-    const version = payload.readUInt8(0);
-    const colorId = payload.slice(1, 34);
-    const hash = payload.slice(34);
-    return { version, colorId, hash };
-  });
+  const _address = util_1.coloredAddressFn(a.address);
   // output dependents
   lazy.prop(o, 'address', () => {
     if (!o.hash) return;

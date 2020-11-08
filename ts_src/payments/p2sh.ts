@@ -4,6 +4,7 @@ import * as bscript from '../script';
 import { Payment, PaymentOpts, Stack } from './index';
 import * as lazy from './lazy';
 import {
+  addressFn,
   checkHash,
   checkInput,
   checkRedeem,
@@ -51,12 +52,7 @@ export function p2sh(a: Payment, opts?: PaymentOpts): Payment {
 
   const o: Payment = { network };
 
-  const _address = lazy.value(() => {
-    const payload = bs58check.decode(a.address);
-    const version = payload.readUInt8(0);
-    const hash = payload.slice(1);
-    return { version, hash };
-  });
+  const _address = addressFn(a.address!);
 
   // output dependents
   lazy.prop(o, 'address', () => {

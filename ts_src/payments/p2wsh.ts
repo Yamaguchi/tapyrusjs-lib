@@ -3,7 +3,7 @@ import { prod as PROD_NETWORK } from '../networks';
 import * as bscript from '../script';
 import { Payment, PaymentOpts, StackElement, StackFunction } from './index';
 import * as lazy from './lazy';
-import { checkHash, stacksEqual} from './util';
+import { checkHash, stacksEqual } from './util';
 
 const typef = require('typeforce');
 const OPS = bscript.OPS;
@@ -12,7 +12,6 @@ const ecc = require('tiny-secp256k1');
 const bech32 = require('bech32');
 
 const EMPTY_BUFFER = Buffer.alloc(0);
-
 
 function chunkHasUncompressedPubkey(chunk: StackElement): boolean {
   if (
