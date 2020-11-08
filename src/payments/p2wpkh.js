@@ -4,6 +4,7 @@ const bcrypto = require('../crypto');
 const networks_1 = require('../networks');
 const bscript = require('../script');
 const lazy = require('./lazy');
+const util_1 = require('./util');
 const typef = require('typeforce');
 const OPS = bscript.OPS;
 const ecc = require('tiny-secp256k1');
@@ -87,9 +88,8 @@ function p2wpkh(a, opts) {
       hash = _address().data;
     }
     if (a.hash) {
-      if (hash.length > 0 && !hash.equals(a.hash))
-        throw new TypeError('Hash mismatch');
-      else hash = a.hash;
+      util_1.checkHash(hash, a.hash);
+      hash = a.hash;
     }
     if (a.output) {
       if (
@@ -98,15 +98,14 @@ function p2wpkh(a, opts) {
         a.output[1] !== 0x14
       )
         throw new TypeError('Output is invalid');
-      if (hash.length > 0 && !hash.equals(a.output.slice(2)))
-        throw new TypeError('Hash mismatch');
-      else hash = a.output.slice(2);
+      const hash2 = a.output.slice(2);
+      util_1.checkHash(hash, hash2);
+      hash = hash2;
     }
     if (a.pubkey) {
       const pkh = bcrypto.hash160(a.pubkey);
-      if (hash.length > 0 && !hash.equals(pkh))
-        throw new TypeError('Hash mismatch');
-      else hash = pkh;
+      util_1.checkHash(hash, pkh);
+      hash = pkh;
       if (!ecc.isPoint(a.pubkey) || a.pubkey.length !== 33)
         throw new TypeError('Invalid pubkey for p2wpkh');
     }
@@ -121,8 +120,7 @@ function p2wpkh(a, opts) {
       if (a.pubkey && !a.pubkey.equals(a.witness[1]))
         throw new TypeError('Pubkey mismatch');
       const pkh = bcrypto.hash160(a.witness[1]);
-      if (hash.length > 0 && !hash.equals(pkh))
-        throw new TypeError('Hash mismatch');
+      util_1.checkHash(hash, pkh);
     }
   }
   return Object.assign(o, a);

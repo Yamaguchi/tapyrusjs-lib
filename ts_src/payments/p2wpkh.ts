@@ -3,6 +3,7 @@ import { prod as PROD_NETWORK } from '../networks';
 import * as bscript from '../script';
 import { Payment, PaymentOpts } from './index';
 import * as lazy from './lazy';
+import { checkHash } from './util';
 const typef = require('typeforce');
 const OPS = bscript.OPS;
 const ecc = require('tiny-secp256k1');
@@ -96,9 +97,8 @@ export function p2wpkh(a: Payment, opts?: PaymentOpts): Payment {
     }
 
     if (a.hash) {
-      if (hash.length > 0 && !hash.equals(a.hash))
-        throw new TypeError('Hash mismatch');
-      else hash = a.hash;
+      checkHash(hash, a.hash);
+      hash = a.hash;
     }
 
     if (a.output) {
@@ -108,16 +108,15 @@ export function p2wpkh(a: Payment, opts?: PaymentOpts): Payment {
         a.output[1] !== 0x14
       )
         throw new TypeError('Output is invalid');
-      if (hash.length > 0 && !hash.equals(a.output.slice(2)))
-        throw new TypeError('Hash mismatch');
-      else hash = a.output.slice(2);
+      const hash2 = a.output.slice(2);
+      checkHash(hash, hash2);
+      hash = hash2;
     }
 
     if (a.pubkey) {
       const pkh = bcrypto.hash160(a.pubkey);
-      if (hash.length > 0 && !hash.equals(pkh))
-        throw new TypeError('Hash mismatch');
-      else hash = pkh;
+      checkHash(hash, pkh);
+      hash = pkh;
       if (!ecc.isPoint(a.pubkey) || a.pubkey.length !== 33)
         throw new TypeError('Invalid pubkey for p2wpkh');
     }
@@ -135,8 +134,7 @@ export function p2wpkh(a: Payment, opts?: PaymentOpts): Payment {
         throw new TypeError('Pubkey mismatch');
 
       const pkh = bcrypto.hash160(a.witness[1]);
-      if (hash.length > 0 && !hash.equals(pkh))
-        throw new TypeError('Hash mismatch');
+      checkHash(hash, pkh);
     }
   }
 

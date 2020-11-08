@@ -4,6 +4,7 @@ const bcrypto = require('../crypto');
 const networks_1 = require('../networks');
 const bscript = require('../script');
 const lazy = require('./lazy');
+const util_1 = require('./util');
 const typef = require('typeforce');
 const OPS = bscript.OPS;
 const ecc = require('tiny-secp256k1');
@@ -135,9 +136,8 @@ function p2wsh(a, opts) {
       hash = _address().data;
     }
     if (a.hash) {
-      if (hash.length > 0 && !hash.equals(a.hash))
-        throw new TypeError('Hash mismatch');
-      else hash = a.hash;
+      util_1.checkHash(hash, a.hash);
+      hash = a.hash;
     }
     if (a.output) {
       if (
@@ -147,9 +147,8 @@ function p2wsh(a, opts) {
       )
         throw new TypeError('Output is invalid');
       const hash2 = a.output.slice(2);
-      if (hash.length > 0 && !hash.equals(hash2))
-        throw new TypeError('Hash mismatch');
-      else hash = hash2;
+      util_1.checkHash(hash, hash2);
+      hash = hash2;
     }
     if (a.redeem) {
       if (a.redeem.network && a.redeem.network !== network)
@@ -168,9 +167,8 @@ function p2wsh(a, opts) {
           throw new TypeError('Redeem.output is invalid');
         // match hash against other sources
         const hash2 = bcrypto.sha256(a.redeem.output);
-        if (hash.length > 0 && !hash.equals(hash2))
-          throw new TypeError('Hash mismatch');
-        else hash = hash2;
+        util_1.checkHash(hash, hash2);
+        hash = hash2;
       }
       if (a.redeem.input && !bscript.isPushOnly(_rchunks()))
         throw new TypeError('Non push-only scriptSig');

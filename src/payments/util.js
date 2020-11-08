@@ -82,8 +82,7 @@ function _checkRedeem(redeem, hashForCheck) {
       throw new TypeError('Redeem.output too short');
     // match hash against other sources
     hash2 = bcrypto.hash160(redeem.output);
-    if (hashForCheck.length > 0 && !hashForCheck.equals(hash2))
-      throw new TypeError('Hash mismatch');
+    checkHash(hashForCheck, hash2);
   }
   if (redeem.input) {
     const hasInput = redeem.input.length > 0;

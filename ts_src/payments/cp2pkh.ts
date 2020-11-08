@@ -3,7 +3,7 @@ import { prod as PROD_NETWORK } from '../networks';
 import * as bscript from '../script';
 import { Payment, PaymentOpts } from './index';
 import * as lazy from './lazy';
-import { chunksFn, validColorId } from './util';
+import { checkHash, chunksFn, validColorId } from './util';
 
 const typef = require('typeforce');
 const OPS = bscript.OPS;
@@ -108,9 +108,8 @@ export function cp2pkh(a: Payment, opts?: PaymentOpts): Payment {
     }
 
     if (a.hash) {
-      if (hash.length > 0 && !hash.equals(a.hash))
-        throw new TypeError('Hash mismatch');
-      else hash = a.hash;
+      checkHash(hash, a.hash);
+      hash = a.hash;
     }
 
     if (a.colorId) {
@@ -133,16 +132,14 @@ export function cp2pkh(a: Payment, opts?: PaymentOpts): Payment {
       const colorId2 = a.output.slice(1, 34);
       validColorId(colorId, colorId2);
       const hash2 = a.output.slice(38, 58);
-      if (hash.length > 0 && !hash.equals(hash2))
-        throw new TypeError('Hash mismatch');
-      else hash = hash2;
+      checkHash(hash, hash2);
+      hash = hash2;
     }
 
     if (a.pubkey) {
       const pkh = bcrypto.hash160(a.pubkey);
-      if (hash.length > 0 && !hash.equals(pkh))
-        throw new TypeError('Hash mismatch');
-      else hash = pkh;
+      checkHash(hash, pkh);
+      hash = pkh;
     }
 
     if (a.input) {
@@ -159,8 +156,7 @@ export function cp2pkh(a: Payment, opts?: PaymentOpts): Payment {
         throw new TypeError('Pubkey mismatch');
 
       const pkh = bcrypto.hash160(chunks[1] as Buffer);
-      if (hash.length > 0 && !hash.equals(pkh))
-        throw new TypeError('Hash mismatch');
+      checkHash(hash, pkh);
     }
   }
 

@@ -84,9 +84,8 @@ function p2pkh(a, opts) {
       hash = _address().hash;
     }
     if (a.hash) {
-      if (hash.length > 0 && !hash.equals(a.hash))
-        throw new TypeError('Hash mismatch');
-      else hash = a.hash;
+      util_1.checkHash(hash, a.hash);
+      hash = a.hash;
     }
     if (a.output) {
       if (
@@ -99,15 +98,13 @@ function p2pkh(a, opts) {
       )
         throw new TypeError('Output is invalid');
       const hash2 = a.output.slice(3, 23);
-      if (hash.length > 0 && !hash.equals(hash2))
-        throw new TypeError('Hash mismatch');
-      else hash = hash2;
+      util_1.checkHash(hash, hash2);
+      hash = hash2;
     }
     if (a.pubkey) {
       const pkh = bcrypto.hash160(a.pubkey);
-      if (hash.length > 0 && !hash.equals(pkh))
-        throw new TypeError('Hash mismatch');
-      else hash = pkh;
+      util_1.checkHash(hash, pkh);
+      hash = pkh;
     }
     if (a.input) {
       const chunks = util_1.chunksFn(a.input)();
@@ -121,8 +118,7 @@ function p2pkh(a, opts) {
       if (a.pubkey && !a.pubkey.equals(chunks[1]))
         throw new TypeError('Pubkey mismatch');
       const pkh = bcrypto.hash160(chunks[1]);
-      if (hash.length > 0 && !hash.equals(pkh))
-        throw new TypeError('Hash mismatch');
+      util_1.checkHash(hash, pkh);
     }
   }
   return Object.assign(o, a);
