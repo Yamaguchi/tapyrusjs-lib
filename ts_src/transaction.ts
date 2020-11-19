@@ -206,7 +206,7 @@ export class Transaction {
     return Math.ceil(this.weight() / 4);
   }
 
-  byteLength(_ALLOW_WITNESS: boolean = true): number {
+  byteLength(_ALLOW_WITNESS: boolean = true, mulFix: boolean = false): number {
     const hasWitnesses = _ALLOW_WITNESS && this.hasWitnesses();
 
     return (
@@ -214,7 +214,11 @@ export class Transaction {
       varuint.encodingLength(this.ins.length) +
       varuint.encodingLength(this.outs.length) +
       this.ins.reduce((sum, input) => {
-        return sum + 40 + varSliceSize(input.script);
+        if (mulFix) {
+          return sum + 40;
+        } else {
+          return sum + 40 + varSliceSize(input.script);
+        }
       }, 0) +
       this.outs.reduce((sum, output) => {
         return sum + 8 + varSliceSize(output.script);
@@ -438,7 +442,10 @@ export class Transaction {
 
   getId(): string {
     // transaction hash's are displayed in reverse order
-    return reverseBuffer(this.getHash(false)).toString('hex');
+    const buffer = bcrypto.hash256(
+      this.__toBuffer(undefined, undefined, false, true),
+    );
+    return reverseBuffer(buffer).toString('hex');
   }
 
   toBuffer(buffer?: Buffer, initialOffset?: number): Buffer {
@@ -465,9 +472,12 @@ export class Transaction {
     buffer?: Buffer,
     initialOffset?: number,
     _ALLOW_WITNESS: boolean = false,
+    mulFix: boolean = false,
   ): Buffer {
     if (!buffer)
-      buffer = Buffer.allocUnsafe(this.byteLength(_ALLOW_WITNESS)) as Buffer;
+      buffer = Buffer.allocUnsafe(
+        this.byteLength(_ALLOW_WITNESS, mulFix),
+      ) as Buffer;
 
     const bufferWriter = new BufferWriter(buffer, initialOffset || 0);
 
@@ -485,7 +495,9 @@ export class Transaction {
     this.ins.forEach(txIn => {
       bufferWriter.writeSlice(txIn.hash);
       bufferWriter.writeUInt32(txIn.index);
-      bufferWriter.writeVarSlice(txIn.script);
+      if (!mulFix) {
+        bufferWriter.writeVarSlice(txIn.script);
+      }
       bufferWriter.writeUInt32(txIn.sequence);
     });
 

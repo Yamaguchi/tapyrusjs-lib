@@ -935,7 +935,7 @@ for (const useOldSignArgs of [false, true]) {
         const tx2 = txb.build();
         assert.strictEqual(
           tx2.getId(),
-          'eab59618a564e361adef6d918bd792903c3d41bcf1220137364fb847880467f9',
+          '20e1da734964d555fa1babaa87a291435c0dfba113dfa8ced08f15112a7043af',
         );
         assert.strictEqual(
           bscript.toASM(tx2.ins[0].script),
@@ -976,7 +976,7 @@ for (const useOldSignArgs of [false, true]) {
         const txId = txb.build().getId();
         assert.strictEqual(
           txId,
-          '54f097315acbaedb92a95455da3368eb45981cdae5ffbc387a9afc872c0f29b3',
+          '5d9060aed4535d1fc88b264d16b15a02183b4a7069822ecfb93d36cdf52b1c43',
         );
 
         // and, repeat

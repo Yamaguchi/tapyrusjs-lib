@@ -153,14 +153,18 @@ class Transaction {
   virtualSize() {
     return Math.ceil(this.weight() / 4);
   }
-  byteLength(_ALLOW_WITNESS = true) {
+  byteLength(_ALLOW_WITNESS = true, mulFix = false) {
     const hasWitnesses = _ALLOW_WITNESS && this.hasWitnesses();
     return (
       (hasWitnesses ? 10 : 8) +
       varuint.encodingLength(this.ins.length) +
       varuint.encodingLength(this.outs.length) +
       this.ins.reduce((sum, input) => {
-        return sum + 40 + varSliceSize(input.script);
+        if (mulFix) {
+          return sum + 40;
+        } else {
+          return sum + 40 + varSliceSize(input.script);
+        }
       }, 0) +
       this.outs.reduce((sum, output) => {
         return sum + 8 + varSliceSize(output.script);
@@ -336,7 +340,10 @@ class Transaction {
   }
   getId() {
     // transaction hash's are displayed in reverse order
-    return bufferutils_1.reverseBuffer(this.getHash(false)).toString('hex');
+    const buffer = bcrypto.hash256(
+      this.__toBuffer(undefined, undefined, false, true),
+    );
+    return bufferutils_1.reverseBuffer(buffer).toString('hex');
   }
   toBuffer(buffer, initialOffset) {
     return this.__toBuffer(buffer, initialOffset, true);
@@ -352,8 +359,9 @@ class Transaction {
     typeforce(types.tuple(types.Number, [types.Buffer]), arguments);
     this.ins[index].witness = witness;
   }
-  __toBuffer(buffer, initialOffset, _ALLOW_WITNESS = false) {
-    if (!buffer) buffer = Buffer.allocUnsafe(this.byteLength(_ALLOW_WITNESS));
+  __toBuffer(buffer, initialOffset, _ALLOW_WITNESS = false, mulFix = false) {
+    if (!buffer)
+      buffer = Buffer.allocUnsafe(this.byteLength(_ALLOW_WITNESS, mulFix));
     const bufferWriter = new bufferutils_1.BufferWriter(
       buffer,
       initialOffset || 0,
@@ -368,7 +376,9 @@ class Transaction {
     this.ins.forEach(txIn => {
       bufferWriter.writeSlice(txIn.hash);
       bufferWriter.writeUInt32(txIn.index);
-      bufferWriter.writeVarSlice(txIn.script);
+      if (!mulFix) {
+        bufferWriter.writeVarSlice(txIn.script);
+      }
       bufferWriter.writeUInt32(txIn.sequence);
     });
     bufferWriter.writeVarInt(this.outs.length);

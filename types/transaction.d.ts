@@ -30,7 +30,7 @@ export declare class Transaction {
     hasWitnesses(): boolean;
     weight(): number;
     virtualSize(): number;
-    byteLength(_ALLOW_WITNESS?: boolean): number;
+    byteLength(_ALLOW_WITNESS?: boolean, mulFix?: boolean): number;
     clone(): Transaction;
     /**
      * Hash transaction for signing a specific input.
