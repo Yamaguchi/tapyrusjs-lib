@@ -827,56 +827,6 @@ for (const useOldSignArgs of [false, true]) {
         }, new RegExp('Transaction has absurd fees'));
       });
 
-      it('should classify witness inputs with witness = true during multisigning', () => {
-        const innerKeyPair = ECPair.fromWIF(
-          'cRAwuVuVSBZMPu7hdrYvMCZ8eevzmkExjFbaBLhqnDdrezxN3nTS',
-          network,
-        );
-        const witnessScript = Buffer.from(
-          '522102bbbd6eb01efcbe4bd9664b886f26f69de5afcb2e479d72596c8bf21929e3' +
-            '52e22102d9c3f7180ef13ec5267723c9c2ffab56a4215241f837502ea8977c8532' +
-            'b9ea1952ae',
-          'hex',
-        );
-        const redeemScript = Buffer.from(
-          '002024376a0a9abab599d0e028248d48ebe817bc899efcffa1cd2984d67289daf5af',
-          'hex',
-        );
-        const scriptPubKey = Buffer.from(
-          'a914b64f1a3eacc1c8515592a6f10457e8ff90e4db6a87',
-          'hex',
-        );
-        const txb = new TransactionBuilder(network);
-        txb.setVersion(1);
-        txb.addInput(
-          'a4696c4b0cd27ec2e173ab1fa7d1cc639a98ee237cec95a77ca7ff4145791529',
-          1,
-          0xffffffff,
-          scriptPubKey,
-        );
-        txb.addOutput(scriptPubKey, 99000);
-        txb.sign({
-          prevOutScriptType: 'p2sh-p2wsh-p2ms',
-          vin: 0,
-          keyPair: innerKeyPair,
-          redeemScript,
-          witnessValue: 100000,
-          witnessScript,
-        });
-
-        // 2-of-2 signed only once
-        const tx = txb.buildIncomplete();
-
-        // Only input is segwit, so txid should be accurate with the final tx
-        assert.strictEqual(
-          tx.getId(),
-          'f15d0a65b21b4471405b21a099f8b18e1ae4d46d55efbd0f4766cf11ad6cb821',
-        );
-
-        const txHex = tx.toHex();
-        TransactionBuilder.fromTransaction(Transaction.fromHex(txHex));
-      });
-
       it('should handle badly pre-filled OP_0s', () => {
         // OP_0 is used where a signature is missing
         const redeemScripSig = bscript.fromASM(
