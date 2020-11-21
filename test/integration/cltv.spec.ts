@@ -2,6 +2,7 @@ import * as assert from 'assert';
 import { before, describe, it } from 'mocha';
 import * as bitcoin from '../..';
 import { regtestUtils } from './_regtest';
+
 const regtest = regtestUtils.network;
 const bip65 = require('bip65');
 
@@ -98,9 +99,11 @@ describe('bitcoinjs-lib (transactions w/ CLTV)', () => {
       tx.setInputScript(0, redeemScriptSig!);
 
       await regtestUtils.broadcast(tx.toHex());
-
+      const hash = bitcoin.bufferutils
+        .reverseBuffer(tx.getHash())
+        .toString('hex');
       await regtestUtils.verify({
-        txId: tx.getId(),
+        txId: hash,
         address: regtestUtils.RANDOM_ADDRESS,
         vout: 0,
         value: 7e4,
@@ -151,8 +154,11 @@ describe('bitcoinjs-lib (transactions w/ CLTV)', () => {
       // into the future!
       await regtestUtils.mine(5);
       await regtestUtils.broadcast(tx.toHex());
+      const hash = bitcoin.bufferutils
+        .reverseBuffer(tx.getHash())
+        .toString('hex');
       await regtestUtils.verify({
-        txId: tx.getId(),
+        txId: hash,
         address: regtestUtils.RANDOM_ADDRESS,
         vout: 0,
         value: 7e4,
@@ -199,8 +205,11 @@ describe('bitcoinjs-lib (transactions w/ CLTV)', () => {
       tx.setInputScript(0, redeemScriptSig!);
 
       await regtestUtils.broadcast(tx.toHex());
+      const hash = bitcoin.bufferutils
+        .reverseBuffer(tx.getHash())
+        .toString('hex');
       await regtestUtils.verify({
-        txId: tx.getId(),
+        txId: hash,
         address: regtestUtils.RANDOM_ADDRESS,
         vout: 0,
         value: 8e4,
