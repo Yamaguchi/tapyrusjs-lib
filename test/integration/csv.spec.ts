@@ -160,9 +160,11 @@ describe('bitcoinjs-lib (transactions w/ CSV)', () => {
       await regtestUtils.mine(10);
 
       await regtestUtils.broadcast(tx.toHex());
-
+      const hash = bitcoin.bufferutils
+        .reverseBuffer(tx.getHash())
+        .toString('hex');
       await regtestUtils.verify({
-        txId: tx.getId(),
+        txId: hash,
         address: regtestUtils.RANDOM_ADDRESS,
         vout: 0,
         value: 7e4,
@@ -280,9 +282,11 @@ describe('bitcoinjs-lib (transactions w/ CSV)', () => {
       tx.setInputScript(0, redeemScriptSig!);
 
       await regtestUtils.broadcast(tx.toHex());
-
+      const hash = bitcoin.bufferutils
+        .reverseBuffer(tx.getHash())
+        .toString('hex');
       await regtestUtils.verify({
-        txId: tx.getId(),
+        txId: hash,
         address: regtestUtils.RANDOM_ADDRESS,
         vout: 0,
         value: 7e4,
@@ -350,9 +354,11 @@ describe('bitcoinjs-lib (transactions w/ CSV)', () => {
       await regtestUtils.mine(2);
 
       await regtestUtils.broadcast(tx.toHex());
-
+      const hash = bitcoin.bufferutils
+        .reverseBuffer(tx.getHash())
+        .toString('hex');
       await regtestUtils.verify({
-        txId: tx.getId(),
+        txId: hash,
         address: regtestUtils.RANDOM_ADDRESS,
         vout: 0,
         value: 7e4,
@@ -417,9 +423,11 @@ describe('bitcoinjs-lib (transactions w/ CSV)', () => {
       await regtestUtils.mine(5);
 
       await regtestUtils.broadcast(tx.toHex());
-
+      const hash = bitcoin.bufferutils
+        .reverseBuffer(tx.getHash())
+        .toString('hex');
       await regtestUtils.verify({
-        txId: tx.getId(),
+        txId: hash,
         address: regtestUtils.RANDOM_ADDRESS,
         vout: 0,
         value: 7e4,
