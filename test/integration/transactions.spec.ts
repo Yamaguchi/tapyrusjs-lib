@@ -229,9 +229,11 @@ describe('bitcoinjs-lib (transactions with psbt)', () => {
 
     // build and broadcast to the Bitcoin RegTest network
     await regtestUtils.broadcast(tx.toHex());
-
+    const txHash = bitcoin.bufferutils
+      .reverseBuffer(tx.getHash())
+      .toString('hex');
     await regtestUtils.verify({
-      txId: tx.getId(),
+      txId: txHash,
       address: regtestUtils.RANDOM_ADDRESS,
       vout: 0,
       value: 1e4,
@@ -274,8 +276,11 @@ describe('bitcoinjs-lib (transactions with psbt)', () => {
     // build and broadcast to the Bitcoin RegTest network
     await regtestUtils.broadcast(tx.toHex());
 
+    const txHash = bitcoin.bufferutils
+      .reverseBuffer(tx.getHash())
+      .toString('hex');
     await regtestUtils.verify({
-      txId: tx.getId(),
+      txId: txHash,
       address: p2sh.payment.address,
       vout: 0,
       value: 2e4,
@@ -304,8 +309,11 @@ describe('bitcoinjs-lib (transactions with psbt)', () => {
       .finalizeAllInputs()
       .extractTransaction();
     await regtestUtils.broadcast(tx.toHex());
+    const txHash = bitcoin.bufferutils
+      .reverseBuffer(tx.getHash())
+      .toString('hex');
     await regtestUtils.verify({
-      txId: tx.getId(),
+      txId: txHash,
       address: p2sh.payment.address,
       vout: 0,
       value: 2e4,
@@ -338,8 +346,11 @@ describe('bitcoinjs-lib (transactions with psbt)', () => {
     // build and broadcast to the Bitcoin RegTest network
     await regtestUtils.broadcast(tx.toHex());
 
+    const txHash = bitcoin.bufferutils
+      .reverseBuffer(tx.getHash())
+      .toString('hex');
     await regtestUtils.verify({
-      txId: tx.getId(),
+      txId: txHash,
       address: regtestUtils.RANDOM_ADDRESS,
       vout: 0,
       value: 2e4,
@@ -366,8 +377,11 @@ describe('bitcoinjs-lib (transactions with psbt)', () => {
     psbt.finalizeAllInputs();
     const tx = psbt.extractTransaction();
     await regtestUtils.broadcast(tx.toHex());
+    const txHash = bitcoin.bufferutils
+      .reverseBuffer(tx.getHash())
+      .toString('hex');
     await regtestUtils.verify({
-      txId: tx.getId(),
+      txId: txHash,
       address: regtestUtils.RANDOM_ADDRESS,
       vout: 0,
       value: 2e4,
@@ -405,9 +419,11 @@ describe('bitcoinjs-lib (transactions with psbt)', () => {
 
     // build and broadcast to the Bitcoin RegTest network
     await regtestUtils.broadcast(tx.toHex());
-
+    const txHash = bitcoin.bufferutils
+      .reverseBuffer(tx.getHash())
+      .toString('hex');
     await regtestUtils.verify({
-      txId: tx.getId(),
+      txId: txHash,
       address: regtestUtils.RANDOM_ADDRESS,
       vout: 0,
       value: 2e4,
@@ -429,8 +445,11 @@ describe('bitcoinjs-lib (transactions with psbt)', () => {
     psbt.finalizeAllInputs();
     const tx = psbt.extractTransaction();
     await regtestUtils.broadcast(tx.toHex());
+    const hash = bitcoin.bufferutils
+      .reverseBuffer(tx.getHash())
+      .toString('hex');
     await regtestUtils.verify({
-      txId: tx.getId(),
+      txId: hash,
       address: regtestUtils.RANDOM_ADDRESS,
       vout: 0,
       value: 2e4,
@@ -486,9 +505,11 @@ describe('bitcoinjs-lib (transactions with psbt)', () => {
 
       // build and broadcast to the Bitcoin RegTest network
       await regtestUtils.broadcast(tx.toHex());
-
+      const txHash = bitcoin.bufferutils
+        .reverseBuffer(tx.getHash())
+        .toString('hex');
       await regtestUtils.verify({
-        txId: tx.getId(),
+        txId: txHash,
         address: regtestUtils.RANDOM_ADDRESS,
         vout: 0,
         value: 2e4,
@@ -521,8 +542,11 @@ describe('bitcoinjs-lib (transactions with psbt)', () => {
       psbt.finalizeAllInputs();
       const tx = psbt.extractTransaction();
       await regtestUtils.broadcast(tx.toHex());
+      const txHash = bitcoin.bufferutils
+        .reverseBuffer(tx.getHash())
+        .toString('hex');
       await regtestUtils.verify({
-        txId: tx.getId(),
+        txId: txHash,
         address: regtestUtils.RANDOM_ADDRESS,
         vout: 0,
         value: 2e4,
@@ -551,8 +575,11 @@ describe('bitcoinjs-lib (transactions with psbt)', () => {
       psbt.finalizeAllInputs();
       const tx = psbt.extractTransaction();
       await regtestUtils.broadcast(tx.toHex());
+      const txHash = bitcoin.bufferutils
+        .reverseBuffer(tx.getHash())
+        .toString('hex');
       await regtestUtils.verify({
-        txId: tx.getId(),
+        txId: txHash,
         address: regtestUtils.RANDOM_ADDRESS,
         vout: 0,
         value: 2e4,
@@ -614,9 +641,11 @@ describe('bitcoinjs-lib (transactions with psbt)', () => {
 
     // build and broadcast to the Bitcoin RegTest network
     await regtestUtils.broadcast(tx.toHex());
-
+    const txHash = bitcoin.bufferutils
+      .reverseBuffer(tx.getHash())
+      .toString('hex');
     await regtestUtils.verify({
-      txId: tx.getId(),
+      txId: txHash,
       address: regtestUtils.RANDOM_ADDRESS,
       vout: 0,
       value: 2e4,
