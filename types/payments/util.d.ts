@@ -1,5 +1,6 @@
 import { Network } from '../networks';
 import { Payment, PaymentFunction, StackFunction } from './index';
+export declare function fromOutputScript(output: Buffer, network?: Network): Payment;
 export declare function addressFn(address: string): () => {
     version: number;
     hash: Buffer;

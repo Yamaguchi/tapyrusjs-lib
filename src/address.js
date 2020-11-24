@@ -42,25 +42,9 @@ function toBech32(data, version, prefix) {
 }
 exports.toBech32 = toBech32;
 function fromOutputScript(output, network) {
-  // TODO: Network
-  network = network || networks.prod;
   try {
-    return payments.p2pkh({ output, network }).address;
-  } catch (e) {}
-  try {
-    return payments.p2sh({ output, network }).address;
-  } catch (e) {}
-  try {
-    return payments.p2wpkh({ output, network }).address;
-  } catch (e) {}
-  try {
-    return payments.p2wsh({ output, network }).address;
-  } catch (e) {}
-  try {
-    return payments.cp2pkh({ output, network }).address;
-  } catch (e) {}
-  try {
-    return payments.cp2pkh({ output, network }).address;
+    const payment = payments.util.fromOutputScript(output, network);
+    return payment.address;
   } catch (e) {}
   throw new Error(bscript.toASM(output) + ' has no matching Address');
 }

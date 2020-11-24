@@ -1,9 +1,37 @@
-import * as bcrypto from '../crypto';
 import { Network } from '../networks';
+
+import * as bcrypto from '../crypto';
+import * as networks from '../networks';
+import * as payments from '../payments';
 import * as bscript from '../script';
 import { Payment, PaymentFunction, Stack, StackFunction } from './index';
 import * as lazy from './lazy';
 const bs58check = require('bs58check');
+
+export function fromOutputScript(output: Buffer, network?: Network): Payment {
+  network = network || networks.prod;
+
+  try {
+    return payments.p2pkh({ output, network });
+  } catch (e) {}
+  try {
+    return payments.p2sh({ output, network });
+  } catch (e) {}
+  try {
+    return payments.p2wpkh({ output, network });
+  } catch (e) {}
+  try {
+    return payments.p2wsh({ output, network });
+  } catch (e) {}
+  try {
+    return payments.cp2pkh({ output, network });
+  } catch (e) {}
+  try {
+    return payments.cp2pkh({ output, network });
+  } catch (e) {}
+
+  throw new Error(bscript.toASM(output) + ' is not standard script');
+}
 
 export function addressFn(
   address: string,

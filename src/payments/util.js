@@ -1,9 +1,34 @@
 'use strict';
 Object.defineProperty(exports, '__esModule', { value: true });
 const bcrypto = require('../crypto');
+const networks = require('../networks');
+const payments = require('../payments');
 const bscript = require('../script');
 const lazy = require('./lazy');
 const bs58check = require('bs58check');
+function fromOutputScript(output, network) {
+  network = network || networks.prod;
+  try {
+    return payments.p2pkh({ output, network });
+  } catch (e) {}
+  try {
+    return payments.p2sh({ output, network });
+  } catch (e) {}
+  try {
+    return payments.p2wpkh({ output, network });
+  } catch (e) {}
+  try {
+    return payments.p2wsh({ output, network });
+  } catch (e) {}
+  try {
+    return payments.cp2pkh({ output, network });
+  } catch (e) {}
+  try {
+    return payments.cp2pkh({ output, network });
+  } catch (e) {}
+  throw new Error(bscript.toASM(output) + ' is not standard script');
+}
+exports.fromOutputScript = fromOutputScript;
 function addressFn(address) {
   return lazy.value(() => {
     const payload = bs58check.decode(address);

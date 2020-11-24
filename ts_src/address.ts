@@ -65,28 +65,10 @@ export function toBech32(
 }
 
 export function fromOutputScript(output: Buffer, network?: Network): string {
-  // TODO: Network
-  network = network || networks.prod;
-
   try {
-    return payments.p2pkh({ output, network }).address as string;
+    const payment = payments.util.fromOutputScript(output, network);
+    return payment.address!;
   } catch (e) {}
-  try {
-    return payments.p2sh({ output, network }).address as string;
-  } catch (e) {}
-  try {
-    return payments.p2wpkh({ output, network }).address as string;
-  } catch (e) {}
-  try {
-    return payments.p2wsh({ output, network }).address as string;
-  } catch (e) {}
-  try {
-    return payments.cp2pkh({ output, network }).address as string;
-  } catch (e) {}
-  try {
-    return payments.cp2pkh({ output, network }).address as string;
-  } catch (e) {}
-
   throw new Error(bscript.toASM(output) + ' has no matching Address');
 }
 

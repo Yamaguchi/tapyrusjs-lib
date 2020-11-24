@@ -8,7 +8,7 @@ import { p2pkh } from './p2pkh';
 import { p2sh } from './p2sh';
 import { p2wpkh } from './p2wpkh';
 import { p2wsh } from './p2wsh';
-
+import * as util from './util';
 export interface Payment {
   name?: string;
   network?: Network;
@@ -41,7 +41,7 @@ export type StackElement = Buffer | number;
 export type Stack = StackElement[];
 export type StackFunction = () => Stack;
 
-export { cp2pkh, cp2sh, embed, p2ms, p2pk, p2pkh, p2sh, p2wpkh, p2wsh };
+export { cp2pkh, cp2sh, embed, p2ms, p2pk, p2pkh, p2sh, p2wpkh, p2wsh, util };
 
 // TODO
 // witness commitment
