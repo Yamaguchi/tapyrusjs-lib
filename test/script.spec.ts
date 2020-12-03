@@ -58,7 +58,7 @@ describe('script', () => {
 
   describe('fromASM/toASM (templates)', () => {
     fixtures2.valid.forEach(f => {
-      if (f.inputHex) {
+      if (f.inputHex && f.input) {
         const ih = bscript.toASM(Buffer.from(f.inputHex, 'hex'));
 
         it('encodes/decodes ' + ih, () => {

@@ -1,6 +1,8 @@
 'use strict';
 Object.defineProperty(exports, '__esModule', { value: true });
 const script_1 = require('./script');
+const coloredPubKeyHash = require('./templates/coloredpubkeyhash');
+const coloredScriptHash = require('./templates/coloredscripthash');
 const multisig = require('./templates/multisig');
 const nullData = require('./templates/nulldata');
 const pubKey = require('./templates/pubkey');
@@ -19,6 +21,8 @@ const types = {
   P2WPKH: 'witnesspubkeyhash',
   P2WSH: 'witnessscripthash',
   WITNESS_COMMITMENT: 'witnesscommitment',
+  CP2PKH: 'coloredpubkeyhash',
+  CP2SH: 'coloredscripthash',
 };
 exports.types = types;
 function classifyOutput(script) {
@@ -26,6 +30,8 @@ function classifyOutput(script) {
   if (witnessScriptHash.output.check(script)) return types.P2WSH;
   if (pubKeyHash.output.check(script)) return types.P2PKH;
   if (scriptHash.output.check(script)) return types.P2SH;
+  if (coloredPubKeyHash.output.check(script)) return types.CP2PKH;
+  if (coloredScriptHash.output.check(script)) return types.CP2SH;
   // XXX: optimization, below functions .decompile before use
   const chunks = script_1.decompile(script);
   if (!chunks) throw new TypeError('Invalid script');

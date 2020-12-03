@@ -22,6 +22,9 @@ const PREVOUT_TYPES: Set<string> = new Set([
   'p2pk',
   'p2wpkh',
   'p2ms',
+  // Colored
+  'cp2pkh',
+  'cp2sh',
   // P2SH wrapped
   'p2sh-p2pkh',
   'p2sh-p2pk',
@@ -502,6 +505,23 @@ function expandInput(
         maxSignatures: m,
       };
     }
+
+    case SCRIPT_TYPES.P2MS: {
+      const { m, pubkeys, signatures } = payments.p2ms(
+        {
+          input: scriptSig,
+          output: scriptPubKey,
+        },
+        { allowIncomplete: true },
+      );
+
+      return {
+        prevOutType: SCRIPT_TYPES.P2MS,
+        pubkeys,
+        signatures,
+        maxSignatures: m,
+      };
+    }
   }
 
   if (type === SCRIPT_TYPES.P2SH) {
@@ -662,6 +682,21 @@ function expandOutput(script: Buffer, ourPubKey?: Buffer): TxbOutput {
         pubkeys: p2ms.pubkeys,
         signatures: p2ms.pubkeys!.map((): undefined => undefined),
         maxSignatures: p2ms.m,
+      };
+    }
+
+    case SCRIPT_TYPES.CP2PKH: {
+      if (!ourPubKey) return { type };
+
+      // does our hash160(pubKey) match the output scripts?
+      const pkh1 = payments.cp2pkh({ output: script }).hash;
+      const pkh2 = bcrypto.hash160(ourPubKey);
+      if (!pkh1!.equals(pkh2)) return { type };
+
+      return {
+        type,
+        pubkeys: [ourPubKey],
+        signatures: [undefined],
       };
     }
   }
@@ -940,6 +975,15 @@ function build(
         },
       });
     }
+    case SCRIPT_TYPES.CP2PKH: {
+      if (pubkeys.length === 0) break;
+      if (signatures.length === 0) break;
+
+      return payments.cp2pkh({
+        pubkey: pubkeys[0],
+        signature: signatures[0],
+      });
+    }
   }
 }
 
@@ -1163,6 +1207,50 @@ function checkSignArgs(inputs: TxbInput[], signParams: TxbSignArg): void {
         types.Satoshi,
         signParams.witnessValue,
         `${posType} requires witnessScript`,
+      );
+      break;
+    case 'cp2pkh':
+      if (prevOutType && prevOutType !== 'coloredpubkeyhash') {
+        throw new TypeError(
+          `input #${signParams.vin} is not of type cp2pkh: ${prevOutType}`,
+        );
+      }
+      tfMessage(
+        typeforce.value(undefined),
+        signParams.witnessScript,
+        `${posType} requires NO witnessScript`,
+      );
+      tfMessage(
+        typeforce.value(undefined),
+        signParams.redeemScript,
+        `${posType} requires NO redeemScript`,
+      );
+      tfMessage(
+        typeforce.value(undefined),
+        signParams.witnessValue,
+        `${posType} requires NO witnessValue`,
+      );
+      break;
+    case 'cp2sh':
+      if (prevOutType && prevOutType !== 'coloredpubkeyhash') {
+        throw new TypeError(
+          `input #${signParams.vin} is not of type cp2pkh: ${prevOutType}`,
+        );
+      }
+      tfMessage(
+        typeforce.value(undefined),
+        signParams.witnessScript,
+        `${posType} requires NO witnessScript`,
+      );
+      tfMessage(
+        typeforce.Buffer,
+        signParams.redeemScript,
+        `${posType} requires redeemScript`,
+      );
+      tfMessage(
+        typeforce.value(undefined),
+        signParams.witnessValue,
+        `${posType} requires NO witnessValue`,
       );
       break;
   }

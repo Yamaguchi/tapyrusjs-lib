@@ -1,4 +1,6 @@
 import { decompile } from './script';
+import * as coloredPubKeyHash from './templates/coloredpubkeyhash';
+import * as coloredScriptHash from './templates/coloredscripthash';
 import * as multisig from './templates/multisig';
 import * as nullData from './templates/nulldata';
 import * as pubKey from './templates/pubkey';
@@ -18,6 +20,8 @@ const types = {
   P2WPKH: 'witnesspubkeyhash' as string,
   P2WSH: 'witnessscripthash' as string,
   WITNESS_COMMITMENT: 'witnesscommitment' as string,
+  CP2PKH: 'coloredpubkeyhash',
+  CP2SH: 'coloredscripthash',
 };
 
 function classifyOutput(script: Buffer): string {
@@ -25,6 +29,8 @@ function classifyOutput(script: Buffer): string {
   if (witnessScriptHash.output.check(script)) return types.P2WSH;
   if (pubKeyHash.output.check(script)) return types.P2PKH;
   if (scriptHash.output.check(script)) return types.P2SH;
+  if (coloredPubKeyHash.output.check(script)) return types.CP2PKH;
+  if (coloredScriptHash.output.check(script)) return types.CP2SH;
 
   // XXX: optimization, below functions .decompile before use
   const chunks = decompile(script);

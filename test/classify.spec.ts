@@ -5,6 +5,8 @@ import * as bscript from '../src/script';
 
 import * as fixtures from './fixtures/templates.json';
 
+import * as coloredPubKeyHash from '../src/templates/coloredpubkeyhash';
+import * as coloredScriptHash from '../src/templates/coloredscripthash';
 import * as multisig from '../src/templates/multisig';
 import * as nullData from '../src/templates/nulldata';
 import * as pubKey from '../src/templates/pubkey';
@@ -23,6 +25,8 @@ const tmap = {
   multisig,
   nullData,
   witnessCommitment,
+  coloredPubKeyHash,
+  coloredScriptHash,
 };
 
 describe('classify', () => {
@@ -72,6 +76,8 @@ describe('classify', () => {
     'multisig',
     'nullData',
     'witnessCommitment',
+    'coloredPubKeyHash',
+    'coloredScriptHash',
   ].forEach(name => {
     const inputType = (tmap as any)[name].input;
     const outputType = (tmap as any)[name].output;

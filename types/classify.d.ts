@@ -8,6 +8,8 @@ declare const types: {
     P2WPKH: string;
     P2WSH: string;
     WITNESS_COMMITMENT: string;
+    CP2PKH: string;
+    CP2SH: string;
 };
 declare function classifyOutput(script: Buffer): string;
 declare function classifyInput(script: Buffer, allowIncomplete?: boolean): string;
