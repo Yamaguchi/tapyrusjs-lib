@@ -1,4 +1,4 @@
-// {colorIdentifier} OP_COLOR OP_DUP OP_HASH160 {pubKeyHash} OP_EQUALVERIFY OP_CHECKSIG
+// {colorIdentifier} OP_COLOR OP_HASH160 {scriptHash} OP_EQUAL
 
 import * as bscript from '../../script';
 import { OPS } from '../../script';
