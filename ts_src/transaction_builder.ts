@@ -910,7 +910,10 @@ function build(
       if (pubkeys.length === 0) break;
       if (signatures.length === 0) break;
 
-      return payments.p2wpkh({ pubkey: pubkeys[0], signature: signatures[0] });
+      return payments.p2wpkh({
+        pubkey: pubkeys[0],
+        signature: signatures[0],
+      });
     }
     case SCRIPT_TYPES.P2PK: {
       if (pubkeys.length === 0) break;

@@ -1,5 +1,5 @@
 'use strict';
-// {colorIdentifier} OP_COLOR OP_DUP OP_HASH160 {pubKeyHash} OP_EQUALVERIFY OP_CHECKSIG
+// {colorIdentifier} OP_COLOR OP_HASH160 {scriptHash} OP_EQUAL
 Object.defineProperty(exports, '__esModule', { value: true });
 const bscript = require('../../script');
 const script_1 = require('../../script');
