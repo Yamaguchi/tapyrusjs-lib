@@ -367,21 +367,6 @@ function expandInput(scriptSig, witnessStack, type, scriptPubKey) {
         maxSignatures: m,
       };
     }
-    case SCRIPT_TYPES.P2MS: {
-      const { m, pubkeys, signatures } = payments.p2ms(
-        {
-          input: scriptSig,
-          output: scriptPubKey,
-        },
-        { allowIncomplete: true },
-      );
-      return {
-        prevOutType: SCRIPT_TYPES.P2MS,
-        pubkeys,
-        signatures,
-        maxSignatures: m,
-      };
-    }
   }
   if (type === SCRIPT_TYPES.P2SH) {
     const { output, redeem } = payments.p2sh({
