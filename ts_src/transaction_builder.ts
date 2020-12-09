@@ -955,6 +955,16 @@ function build(
         signature: signatures[0],
       });
     }
+    case SCRIPT_TYPES.CP2SH: {
+      const redeem = build(input.redeemScriptType!, input, allowIncomplete);
+      if (!redeem) return;
+      return payments.cp2sh({
+        redeem: {
+          output: redeem.output || input.redeemScript,
+          input: redeem.input,
+        },
+      });
+    }
   }
 }
 
