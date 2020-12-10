@@ -667,6 +667,21 @@ function expandOutput(script: Buffer, ourPubKey?: Buffer): TxbOutput {
         maxSignatures: p2ms.m,
       };
     }
+
+    case SCRIPT_TYPES.CP2PKH: {
+      if (!ourPubKey) return { type };
+
+      // does our hash160(pubKey) match the output scripts?
+      const pkh1 = payments.cp2pkh({ output: script }).hash;
+      const pkh2 = bcrypto.hash160(ourPubKey);
+      if (!pkh1!.equals(pkh2)) return { type };
+
+      return {
+        type,
+        pubkeys: [ourPubKey],
+        signatures: [undefined],
+      };
+    }
   }
 
   return { type };
