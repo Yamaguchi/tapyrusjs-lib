@@ -115,29 +115,4 @@ describe('bitcoinjs-lib (addresses)', () => {
       true,
     );
   });
-
-  it('can generate a Litecoin address', () => {
-    // WARNING: although possible, bitcoinjs is NOT necessarily compatible with Litecoin
-    const LITECOIN = {
-      messagePrefix: '\x19Litecoin Signed Message:\n',
-      bech32: 'ltc',
-      bip32: {
-        public: 0x019da462,
-        private: 0x019d9cfe,
-      },
-      pubKeyHash: 0x30,
-      scriptHash: 0x32,
-      coloredPubKeyHash: 0x31,
-      coloredScriptHash: 0x33,
-      wif: 0xb0,
-    };
-
-    const keyPair = bitcoin.ECPair.makeRandom({ network: LITECOIN });
-    const { address } = bitcoin.payments.p2pkh({
-      pubkey: keyPair.publicKey,
-      network: LITECOIN,
-    });
-
-    assert.strictEqual(address!.startsWith('L'), true);
-  });
 });
