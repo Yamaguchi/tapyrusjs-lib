@@ -27,7 +27,7 @@ export function fromOutputScript(output: Buffer, network?: Network): Payment {
     return payments.cp2pkh({ output, network });
   } catch (e) {}
   try {
-    return payments.cp2pkh({ output, network });
+    return payments.cp2sh({ output, network });
   } catch (e) {}
 
   throw new Error(bscript.toASM(output) + ' is not standard script');

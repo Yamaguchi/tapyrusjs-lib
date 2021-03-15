@@ -15,6 +15,22 @@
       "script": "OP_HASH160 cd7b44d0b03f2d026d1e586d7ae18903b0d385f6 OP_EQUAL"
     },
     {
+      "network": "prod",
+      "version": 1,
+      "colorId": "c3ec2fd806701a3f55808cbec3922c38dafaa3070c48c803e9043ee3642c660b46",
+      "hash": "168b992bcfc44050310b3a94bd0771136d0b28d1",
+      "base58check": "w26x2EaheVBsceNf9RufpmmZ1i1qLBux1UMKMs16dkcZxNzBTgnA23SYR9oJKDRMQQUdZawBnneKjP",
+      "script": "c3ec2fd806701a3f55808cbec3922c38dafaa3070c48c803e9043ee3642c660b46 OP_COLOR OP_DUP OP_HASH160 168b992bcfc44050310b3a94bd0771136d0b28d1 OP_EQUALVERIFY OP_CHECKSIG"
+    },
+    {
+      "network": "prod",
+      "version": 6,
+      "colorId": "c3ec2fd806701a3f55808cbec3922c38dafaa3070c48c803e9043ee3642c660b46",
+      "hash": "9f840a5fc02407ef0ad499c2ec0eb0b942fb0086",
+      "base58check": "4a28F5ZehQNaMsSCEzBGQSKjVx2Wz2c4s32joimPciFTLzft1F9nPHMTeHMRQ6fzf9is4AcFxQr5Vye",
+      "script": "c3ec2fd806701a3f55808cbec3922c38dafaa3070c48c803e9043ee3642c660b46 OP_COLOR OP_HASH160 9f840a5fc02407ef0ad499c2ec0eb0b942fb0086 OP_EQUAL"
+    },
+    {
       "network": "dev",
       "version": 111,
       "hash": "751e76e8199196d454941c45d1b3a323f1433bd6",
@@ -48,6 +64,22 @@
       "bech32": "tb1qqqqqp399et2xygdj5xreqhjjvcmzhxw4aywxecjdzew6hylgvsesrxh6hy",
       "data": "000000c4a5cad46221b2a187905e5266362b99d5e91c6ce24d165dab93e86433",
       "script": "OP_0 000000c4a5cad46221b2a187905e5266362b99d5e91c6ce24d165dab93e86433"
+    },
+    {
+      "network": "dev",
+      "version": 112,
+      "colorId": "c3ec2fd806701a3f55808cbec3922c38dafaa3070c48c803e9043ee3642c660b46",
+      "hash": "168b992bcfc44050310b3a94bd0771136d0b28d1",
+      "base58check": "22VdQ5VjWcF9zgsnPQodFBS1PBQPaAQEXSofkyMv2D9zV1MGR6XAoYysVri1WbMg5zBBR6qCvcU9yKfY",
+      "script": "c3ec2fd806701a3f55808cbec3922c38dafaa3070c48c803e9043ee3642c660b46 OP_COLOR OP_DUP OP_HASH160 168b992bcfc44050310b3a94bd0771136d0b28d1 OP_EQUALVERIFY OP_CHECKSIG"
+    },
+    {
+      "network": "dev",
+      "version": 197,
+      "colorId": "c3ec2fd806701a3f55808cbec3922c38dafaa3070c48c803e9043ee3642c660b46",
+      "hash": "9f840a5fc02407ef0ad499c2ec0eb0b942fb0086",
+      "base58check": "2oLdn5UKgY7DayDDLL6LKfrNnHKp7iFK8zGAMHVGd2USnCxmpNXbY4o4ML7h89Xojd7Lus68qTQVeTn8",
+      "script": "c3ec2fd806701a3f55808cbec3922c38dafaa3070c48c803e9043ee3642c660b46 OP_COLOR OP_HASH160 9f840a5fc02407ef0ad499c2ec0eb0b942fb0086 OP_EQUAL"
     }
   ],
   "bech32": [
@@ -99,7 +131,7 @@
         "exception": "is too short"
       },
       {
-        "address": "j9ywUkWg2fTQrouxxh5rSZhRvrjMkEUfuiKe",
+        "address": "Gkjxy997PLAEF7cCcjNJzSmgamshLi5n3qxfwDLvpd4oHGDH5FyuTHvY4ERWaykpZYqDtvzwntyjfiN5",
         "exception": "is too long"
       }
     ],

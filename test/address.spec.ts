@@ -16,6 +16,9 @@ describe('address', () => {
 
         assert.strictEqual(decode.version, f.version);
         assert.strictEqual(decode.hash.toString('hex'), f.hash);
+        if (f.colorId) {
+          assert.strictEqual(decode.colorId!.toString('hex'), f.colorId);
+        }
       });
     });
 
@@ -76,9 +79,11 @@ describe('address', () => {
       if (!f.base58check) return;
 
       it('encodes ' + f.hash + ' (' + f.network + ')', () => {
+        const colorId = f.colorId ? Buffer.from(f.colorId, 'hex') : undefined;
         const address = baddress.toBase58Check(
           Buffer.from(f.hash, 'hex'),
           f.version,
+          colorId,
         );
 
         assert.strictEqual(address, f.base58check);
