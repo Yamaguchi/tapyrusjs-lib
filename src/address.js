@@ -19,10 +19,16 @@ function fromBase58Check(address) {
     // Colored
     const colorId = payload.slice(1, 34);
     const hash = payload.slice(34);
+    if (hash.length !== 20) {
+      throw new TypeError(`Invalid hash(${hash})`);
+    }
     return { version, colorId, hash };
   } else {
     // Uncolored
     const hash = payload.slice(1);
+    if (hash.length !== 20) {
+      throw new TypeError(`Invalid hash(${hash})`);
+    }
     return { version, hash };
   }
 }

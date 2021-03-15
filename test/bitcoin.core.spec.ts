@@ -67,8 +67,12 @@ describe('Bitcoin-core', () => {
     const allowedNetworks = [
       bitcoin.networks.prod.pubKeyHash,
       bitcoin.networks.prod.scriptHash,
+      bitcoin.networks.prod.coloredPubKeyHash,
+      bitcoin.networks.prod.coloredScriptHash,
       bitcoin.networks.dev.pubKeyHash,
       bitcoin.networks.dev.scriptHash,
+      bitcoin.networks.dev.coloredPubKeyHash,
+      bitcoin.networks.dev.coloredScriptHash,
     ];
 
     base58KeysInvalid.forEach(f => {
@@ -77,13 +81,12 @@ describe('Bitcoin-core', () => {
       it('throws on ' + strng, () => {
         assert.throws(() => {
           const address = bitcoin.address.fromBase58Check(strng);
-
           assert.notStrictEqual(
             allowedNetworks.indexOf(address.version),
             -1,
             'Invalid network',
           );
-        }, /(Invalid (checksum|network))|(too (short|long))/);
+        }, /(Invalid (checksum|network|hash|token type))|(too (short|long))/);
       });
     });
   });

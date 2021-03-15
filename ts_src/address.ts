@@ -24,18 +24,26 @@ export function fromBase58Check(address: string): Base58CheckResult {
   const payload: Buffer = bs58check.decode(address);
 
   // TODO: 4.0.0, move to "toOutputScript"
-  if (payload.length < 21) throw new TypeError(`${address} is too short(${payload.length})`);
-  if (payload.length > 54) throw new TypeError(`${address} is too long(${payload.length})`);
+  if (payload.length < 21)
+    throw new TypeError(`${address} is too short(${payload.length})`);
+  if (payload.length > 54)
+    throw new TypeError(`${address} is too long(${payload.length})`);
 
   const version = payload.readUInt8(0);
   if (payload.length > 21) {
     // Colored
     const colorId = payload.slice(1, 34);
     const hash = payload.slice(34);
+    if (hash.length !== 20) {
+      throw new TypeError(`Invalid hash(${hash})`);
+    }
     return { version, colorId, hash };
   } else {
     // Uncolored
     const hash = payload.slice(1);
+    if (hash.length !== 20) {
+      throw new TypeError(`Invalid hash(${hash})`);
+    }
     return { version, hash };
   }
 }
@@ -51,7 +59,11 @@ export function fromBech32(address: string): Bech32Result {
   };
 }
 
-export function toBase58Check(hash: Buffer, version: number, colorId?: Buffer): string {
+export function toBase58Check(
+  hash: Buffer,
+  version: number,
+  colorId?: Buffer,
+): string {
   typeforce(types.tuple(types.Hash160bit, types.UInt8), arguments);
 
   const payload = colorId ? Buffer.allocUnsafe(54) : Buffer.allocUnsafe(21);
@@ -62,7 +74,7 @@ export function toBase58Check(hash: Buffer, version: number, colorId?: Buffer): 
   } else {
     hash.copy(payload, 1);
   }
-  
+
   return bs58check.encode(payload);
 }
 
@@ -100,9 +112,15 @@ export function toOutputScript(address: string, network?: Network): Buffer {
     if (decodeBase58.version === network.scriptHash)
       return payments.p2sh({ hash: decodeBase58.hash }).output as Buffer;
     if (decodeBase58.version === network.coloredPubKeyHash)
-      return payments.cp2pkh({ hash: decodeBase58.hash, colorId: decodeBase58.colorId }).output as Buffer;
+      return payments.cp2pkh({
+        hash: decodeBase58.hash,
+        colorId: decodeBase58.colorId,
+      }).output as Buffer;
     if (decodeBase58.version === network.coloredScriptHash)
-      return payments.cp2sh({ hash: decodeBase58.hash, colorId: decodeBase58.colorId }).output as Buffer;
+      return payments.cp2sh({
+        hash: decodeBase58.hash,
+        colorId: decodeBase58.colorId,
+      }).output as Buffer;
   } else {
     try {
       decodeBech32 = fromBech32(address);
