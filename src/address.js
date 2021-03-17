@@ -7,28 +7,29 @@ const types = require('./types');
 const bech32 = require('bech32');
 const bs58check = require('bs58check');
 const typeforce = require('typeforce');
+const PUBKEY_HASH_LENGTH = 20;
+const COLOR_ID_LENGTH = 33;
+const UNCOLORED_LENGTH = 1 + PUBKEY_HASH_LENGTH; // 21
+const COLORED_LENGTH = 1 + PUBKEY_HASH_LENGTH + COLOR_ID_LENGTH; // 54
 function fromBase58Check(address) {
   const payload = bs58check.decode(address);
   // TODO: 4.0.0, move to "toOutputScript"
-  if (payload.length < 21)
+  if (payload.length < UNCOLORED_LENGTH)
     throw new TypeError(`${address} is too short(${payload.length})`);
-  if (payload.length > 54)
+  if (payload.length > COLORED_LENGTH)
     throw new TypeError(`${address} is too long(${payload.length})`);
   const version = payload.readUInt8(0);
-  if (payload.length > 21) {
+  if (payload.length > UNCOLORED_LENGTH) {
     // Colored
-    const colorId = payload.slice(1, 34);
-    const hash = payload.slice(34);
-    if (hash.length !== 20) {
+    const colorId = payload.slice(1, 1 + COLOR_ID_LENGTH);
+    const hash = payload.slice(1 + COLOR_ID_LENGTH);
+    if (hash.length !== PUBKEY_HASH_LENGTH) {
       throw new TypeError(`Invalid hash(${hash})`);
     }
     return { version, colorId, hash };
   } else {
     // Uncolored
     const hash = payload.slice(1);
-    if (hash.length !== 20) {
-      throw new TypeError(`Invalid hash(${hash})`);
-    }
     return { version, hash };
   }
 }
@@ -45,11 +46,13 @@ function fromBech32(address) {
 exports.fromBech32 = fromBech32;
 function toBase58Check(hash, version, colorId) {
   typeforce(types.tuple(types.Hash160bit, types.UInt8), arguments);
-  const payload = colorId ? Buffer.allocUnsafe(54) : Buffer.allocUnsafe(21);
+  const payload = colorId
+    ? Buffer.allocUnsafe(COLORED_LENGTH)
+    : Buffer.allocUnsafe(UNCOLORED_LENGTH);
   payload.writeUInt8(version, 0);
   if (colorId) {
     colorId.copy(payload, 1);
-    hash.copy(payload, 34);
+    hash.copy(payload, 1 + COLOR_ID_LENGTH);
   } else {
     hash.copy(payload, 1);
   }
